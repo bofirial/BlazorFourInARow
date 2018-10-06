@@ -1,7 +1,80 @@
-﻿@page "/"
+﻿@using System.Net
+@using System.Net.Http
+@using Blazor.Extensions;
+@using Models;
+@using System;
+@using System.Collections.Generic;
+@using System.IdentityModel.Tokens.Jwt;
+@using System.Security.Claims;
+@using System.Text;
+@using Microsoft.IdentityModel.Tokens;
+@page "/"
+@inject HttpClient Http
 
 <h1>Blazor Four In A Row!</h1>
 
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+<form action="#" onsubmit="@SendAsync">
+    Game Messages:
+    <input bind="@message" />
+    <button>Send</button>
+</form>
+
+<ul>
+    <li>Messages:</li>
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+@functions
+{
+    string message;
+    IList<string> messages = new List<string>();
+    string url = "Default";
+    HubConnection connection;
+
+    protected override async Task OnInitAsync()
+    {
+        var response = await Http.GetJsonAsync<SignalRConnectionInfo>("http://localhost:7071/api/negotiate");
+
+        connection = new HubConnectionBuilder().WithUrl(response.Url, option =>
+        {
+            option.AccessTokenProvider = () =>
+        {
+            JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
+            string AccessKey = "Azure Access Key";
+
+            var token = JwtTokenHandler.CreateJwtSecurityToken(
+            issuer: null,
+            audience: response.Url,
+            subject: new ClaimsIdentity(new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, "James")
+                }),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccessKey)), SecurityAlgorithms.HmacSha256));
+
+            return Task.FromResult(JwtTokenHandler.WriteToken(token));
+        };
+        }).Build();
+        connection.On<string>("game-update", this.OnGameUpdate);
+        await connection.StartAsync();
+    }
+
+    Task OnGameUpdate(string gameUpdate)
+    {
+        messages.Add(gameUpdate);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    async Task SendAsync()
+    {
+        var response = await Http.PostAsync("http://localhost:7071/api/game-action", new StringContent(message));
+    }
+}
