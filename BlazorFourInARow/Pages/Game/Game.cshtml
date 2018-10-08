@@ -1,19 +1,8 @@
-﻿@using System.Net
-@using System.Net.Http
-@using Blazor.Extensions;
-@using Models;
-@using System;
-@using System.Collections.Generic;
-@using System.IdentityModel.Tokens.Jwt;
-@using System.Security.Claims;
-@using System.Text;
-@using Microsoft.IdentityModel.Tokens;
-@page "/"
-@inject HttpClient Http
+﻿@page "/"
 
-<h1>Blazor Four In A Row!</h1>
+<h1>Game #001</h1>
 
-Welcome to your new app.
+@*Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
@@ -40,14 +29,14 @@ Welcome to your new app.
 
     protected override async Task OnInitAsync()
     {
-        var response = await Http.GetJsonAsync<SignalRConnectionInfo>("http://localhost:7071/api/negotiate");
+        var response = await Http.GetJsonAsync<SignalRConnectionInfo>("https://blazorfourinarowfunctions.azurewebsites.net/api/negotiate");
 
         connection = new HubConnectionBuilder().WithUrl(response.Url, option =>
         {
             option.AccessTokenProvider = () =>
         {
             JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
-            string AccessKey = "Azure Access Key";
+            string AccessKey = "Le6jOFu9QnfvUp7c/sSfVXT8yFRmZazpmG2sX9+SZQU=";
 
             var token = JwtTokenHandler.CreateJwtSecurityToken(
             issuer: null,
@@ -75,6 +64,6 @@ Welcome to your new app.
 
     async Task SendAsync()
     {
-        var response = await Http.PostAsync("http://localhost:7071/api/game-action", new StringContent(message));
+        var response = await Http.PostAsync("https://blazorfourinarowfunctions.azurewebsites.net/api/game-action", new StringContent(message));
     }
-}
+}*@

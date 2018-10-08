@@ -1,6 +1,8 @@
-﻿@import url("open-iconic/font/css/open-iconic-bootstrap.min.css");
+﻿@import url('../wwwroot/css/open-iconic/font/css/open-iconic-bootstrap.min.css');
+
 html, body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 
 /*
 app {
@@ -116,6 +118,7 @@ app {
     }
 
     .sidebar .collapse {
-        // Never collapse the sidebar for wide screens         display: block;
+        // Never collapse the sidebar for wide screens \
+        display: block;
     }
 }*/
