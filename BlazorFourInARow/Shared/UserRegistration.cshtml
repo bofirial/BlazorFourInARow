@@ -1,0 +1,20 @@
+﻿
+@inject BlazorFourInARow.BusinessLogic.IUserRegistrar UserRegistrar
+
+    <div class="form-group">
+        <label for="user-display-name">Enter your First Name</label>
+        <input type="text" class="form-control" id="user-display-name" bind="User.DisplayName" />
+    </div>
+
+    <button class="btn btn-primary" onclick="@RegisterUserAsync">Submit</button>
+
+@functions {
+    User User = new User();
+
+    async Task RegisterUserAsync()
+    {
+        await UserRegistrar.RegisterUserAsync(User);
+
+        StateHasChanged();
+    }
+}

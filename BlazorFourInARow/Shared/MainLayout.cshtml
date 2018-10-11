@@ -1,19 +1,35 @@
-@inherits BlazorLayoutComponent
+@using BlazorFourInARow.BusinessLogic
+@using BlazorFourInARow.Common.Models
+@inherits Microsoft.AspNetCore.Blazor.Layouts.BlazorLayoutComponent
 
-<HeaderNavigation />
+@inject IUserConnectionInfoStore UserConnectionInfoStore
 
-@Body
+<HeaderNavigation CurrentUser="@UserConnectionInfo?.User"/>
 
-@*<div class="sidebar">
-    <NavMenu />
+<div class="main content px-4 pt-1">
+    @if (null != UserConnectionInfo)
+    {
+        @Body
+    }
+    else
+    {
+        <UserRegistration />
+    }
 </div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <span class="ml-md-auto">James Schafer</span>
-    </div>
+@functions {
+    public UserConnectionInfo UserConnectionInfo = null;
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>*@
+    protected void SetUserConnectionInfo(UserConnectionInfo userConnectionInfo)
+    {
+        UserConnectionInfo = userConnectionInfo;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfo());
+
+        UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;
+    }
+}

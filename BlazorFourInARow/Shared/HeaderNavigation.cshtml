@@ -8,17 +8,17 @@
         <ul class="navbar-nav mr-auto w-100">
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match=NavLinkMatch.All>
-                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                    <span class="oi oi-home mx-1" aria-hidden="true"></span> Home
                 </NavLink>
             </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="history">
-                    <span class="oi oi-layers" aria-hidden="true"></span> Game History
+                    <span class="oi oi-layers mx-1" aria-hidden="true"></span> Game History
                 </NavLink>
             </li>
-            <li class="nav-item px-3 ml-auto">
+            <li class="nav-item px-3 ml-lg-auto">
                 <NavLink class="nav-item nav-link ml-auto" href="statistics">
-                    <span class="oi oi-person" aria-hidden="true"></span> James
+                    <span class="oi oi-person mx-1" aria-hidden="true"></span> @CurrentUser?.DisplayName
                 </NavLink>
             </li>
         </ul>
@@ -26,10 +26,13 @@
 </nav>
 
 @functions {
-bool collapseNavMenu = false;
+    bool collapseNavMenu = false;
 
-void ToggleNavMenu()
-{
-    collapseNavMenu = !collapseNavMenu;
-}
+    [Parameter]
+    User CurrentUser { get; set; }
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
 }

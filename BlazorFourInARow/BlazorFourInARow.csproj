@@ -12,7 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Extensions.Logging" Version="0.1.8" />
     <PackageReference Include="Blazor.Extensions.SignalR" Version="0.1.7" />
+    <PackageReference Include="Blazor.Extensions.Storage" Version="0.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.6.0" PrivateAssets="all" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.3.0" />
