@@ -28,7 +28,7 @@
 
     protected override async Task OnInitAsync()
     {
-        SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfo());
+        SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfoAsync());
 
         UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;
     }

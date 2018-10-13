@@ -18,7 +18,7 @@ namespace BlazorFourInARow.BusinessLogic
             _logger = logger;
         }
 
-        public async Task<UserConnectionInfo> GetUserConnectionInfo()
+        public async Task<UserConnectionInfo> GetUserConnectionInfoAsync()
         {
             var userConnectionInfo = await _localStorage.GetItem<UserConnectionInfo>(KEY);
 
@@ -27,7 +27,7 @@ namespace BlazorFourInARow.BusinessLogic
             return userConnectionInfo;
         }
 
-        public async Task SetUserConnectionInfo(UserConnectionInfo userConnectionInfo)
+        public async Task SetUserConnectionInfoAsync(UserConnectionInfo userConnectionInfo)
         {
             _logger.LogInformation($"Setting current user to: {userConnectionInfo?.User?.DisplayName}.");
 

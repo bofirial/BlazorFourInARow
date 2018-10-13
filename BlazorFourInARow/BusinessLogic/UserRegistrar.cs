@@ -33,7 +33,7 @@ namespace BlazorFourInARow.BusinessLogic
                 await _httpClient.PostJsonAsync<UserConnectionInfo>(
                     $"{_serviceBaseUrlProvider.GetServiceBaseUrl()}/api/user", user);
 
-            await _currentUserStore.SetUserConnectionInfo(userConnectionInfo);
+            await _currentUserStore.SetUserConnectionInfoAsync(userConnectionInfo);
         }
     }
 }

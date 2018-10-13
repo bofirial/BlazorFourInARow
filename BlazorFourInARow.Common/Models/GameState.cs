@@ -11,5 +11,7 @@ namespace BlazorFourInARow.Common.Models
         public List<List<GameCell>> GameCells { get; set; }
 
         public GameSettings GameSettings { get; set; }
+
+        public string DebugMessage { get; set; }
     }
 }

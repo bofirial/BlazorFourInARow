@@ -8,9 +8,9 @@ namespace BlazorFourInARow.BusinessLogic
 {
     public interface IUserConnectionInfoStore
     {
-        Task<UserConnectionInfo> GetUserConnectionInfo();
+        Task<UserConnectionInfo> GetUserConnectionInfoAsync();
 
-        Task SetUserConnectionInfo(UserConnectionInfo userConnectionInfo);
+        Task SetUserConnectionInfoAsync(UserConnectionInfo userConnectionInfo);
 
         event Action<UserConnectionInfo> UserConnectionInfoChanged;
     }

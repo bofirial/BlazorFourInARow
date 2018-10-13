@@ -25,7 +25,7 @@ namespace BlazorFourInARow.BusinessLogic
 
         public async Task DropGamePieceAsync(int column, string gameId)
         {
-            var userConnectionInfo = await _userConnectionInfoStore.GetUserConnectionInfo();
+            var userConnectionInfo = await _userConnectionInfoStore.GetUserConnectionInfoAsync();
 
             _logger.LogInformation($"Dropping a piece in the {column} column.");
 
