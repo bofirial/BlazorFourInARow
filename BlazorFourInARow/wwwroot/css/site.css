@@ -2,6 +2,37 @@
 html, body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 
+.game-board {
+  border: 25px solid transparent;
+  border-image: url(/images/frame-border.png) 33% repeat;
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  margin-top: 5rem; }
+  @media screen and (min-width: 500px) {
+    .game-board {
+      border: 50px solid transparent;
+      border-image: url(/images/frame-border.png) 33% repeat; } }
+  .game-board .buttons {
+    top: -6rem; }
+    .game-board .buttons li {
+      flex-shrink: 1;
+      overflow: hidden;
+      word-break: break-all; }
+  .game-board li {
+    margin: auto; }
+    .game-board li.cell {
+      background-image: url(/images/game-cell.png);
+      background-size: contain;
+      height: auto;
+      flex: 1 0 auto;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated; }
+      .game-board li.cell:before {
+        content: '';
+        float: left;
+        padding-top: 100%; }
+
 /*
 app {
     position: relative;

@@ -57,19 +57,20 @@ namespace BlazorFourInARowFunctions
                 }
             }
 
-            var gameAction = await CreateNewGameGameAction(client);
+            var gameAction = await CreateNewGameAction(client);
 
             return new OkObjectResult(gameStateBuilder.BuildGameState(new List<GameAction>() { gameAction }));
         }
 
-        private static async Task<GameAction> CreateNewGameGameAction(DocumentClient client)
+        private static async Task<GameAction> CreateNewGameAction(DocumentClient client)
         {
             var gameBuilder = new GameBuilder();
 
-            var newGameGameAction = gameBuilder.BuildNewGame(client);
-            await client.CreateDocumentAsync(DocumentCollectionUri, newGameGameAction);
+            var newGameAction = gameBuilder.BuildNewGame(client);
 
-            return newGameGameAction;
+            await client.CreateDocumentAsync(DocumentCollectionUri, newGameAction);
+
+            return newGameAction;
         }
     }
 }

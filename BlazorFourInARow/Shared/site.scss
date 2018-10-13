@@ -4,6 +4,50 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.game-board {
+    border: 25px solid transparent;
+    border-image: url(/images/frame-border.png) 33% repeat;
+    image-rendering: auto;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    @media screen and (min-width: 500px) {
+        border: 50px solid transparent;
+        border-image: url(/images/frame-border.png) 33% repeat;
+    }
+
+    margin-top: 5rem;
+
+    .buttons {
+        top: -6rem;
+
+        li {
+            flex-shrink: 1;
+            overflow: hidden;
+            word-break: break-all;
+        }
+    }
+
+    li {
+        margin: auto;
+
+        &.cell {
+            background-image: url(/images/game-cell.png);
+            background-size: contain;
+            height: auto;
+            flex: 1 0 auto;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+
+            &:before {
+                content: '';
+                float: left;
+                padding-top: 100%;
+            }
+        }
+    }
+}
+
 /*
 app {
     position: relative;

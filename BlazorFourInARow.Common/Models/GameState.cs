@@ -6,5 +6,10 @@ namespace BlazorFourInARow.Common.Models
 {
     public class GameState
     {
+        public string GameId { get; set; }
+
+        public List<List<GameCell>> GameCells { get; set; }
+
+        public GameSettings GameSettings { get; set; }
     }
 }

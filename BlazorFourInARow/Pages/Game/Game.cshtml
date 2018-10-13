@@ -2,7 +2,7 @@
 
 @inherits BlazorFourInARow.Pages.Game.GameBase
 
-<GameBoard />
+<GameBoard GameCells="@GameState?.GameCells" GameId="@GameState?.GameId"/>
 
 @*Welcome to your new app.
 

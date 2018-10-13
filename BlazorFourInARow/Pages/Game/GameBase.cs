@@ -18,8 +18,6 @@ namespace BlazorFourInARow.Pages.Game
         protected override async Task OnInitAsync()
         {
             GameState = await CurrentGameStateProvider.GetCurrentGameStateAsync();
-
-            await base.OnInitAsync();
         }
     }
 }

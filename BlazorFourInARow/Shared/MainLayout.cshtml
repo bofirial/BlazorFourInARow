@@ -31,7 +31,5 @@
         SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfo());
 
         UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;
-
-        await base.OnInitAsync();
     }
 }

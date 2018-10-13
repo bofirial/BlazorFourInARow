@@ -1,2 +1,43 @@
 ﻿
-<h1>Game #001</h1>
+<div class="game-board d-flex flex-column position-relative">
+    @if (null != GameCells)
+    {
+        <ol class="d-flex flex-row list-unstyled m-0 position-absolute w-100 buttons">
+            @for (int i = 0; i < GameCells[0].Count; i++)
+            {
+                var columnId = i;
+
+                <li>
+                    <a href="javascript:void(0)" class="btn btn-secondary" onclick="@(() => PlaceGamePiece(columnId))">Drop</a>
+                </li>
+            }
+        </ol>
+
+        foreach (var row in GameCells)
+         {
+             <ol class="d-flex flex-row list-unstyled m-0">
+                 @foreach (var cell in row)
+                 {
+                     <li class="cell">
+                         <span class="cell @cell?.Team?.DisplayColor"></span>
+                     </li>
+                 }
+             </ol>
+         }
+    }
+</div>
+
+@functions {
+
+    [Parameter]
+    string GameId { get; set; }
+
+    [Parameter]
+    List<List<GameCell>> GameCells { get; set; }
+
+
+    async Task PlaceGamePiece(int column)
+    {
+        StateHasChanged();
+    }
+}
