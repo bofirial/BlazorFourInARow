@@ -1,69 +1,71 @@
 ﻿@page "/"
 
-<h1>Game #001</h1>
+@inherits BlazorFourInARow.Pages.Game.GameBase
+
+<GameBoard />
 
 @*Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <SurveyPrompt Title="How is Blazor working for you?" />
 
-<form action="#" onsubmit="@SendAsync">
-    Game Messages:
-    <input bind="@message" />
-    <button>Send</button>
-</form>
+    <form action="#" onsubmit="@SendAsync">
+        Game Messages:
+        <input bind="@message" />
+        <button>Send</button>
+    </form>
 
-<ul>
-    <li>Messages:</li>
-    @foreach (var message in messages)
-    {
-        <li>@message</li>
-    }
-</ul>
-
-@functions
-{
-    string message;
-    IList<string> messages = new List<string>();
-    string url = "Default";
-    HubConnection connection;
-
-    protected override async Task OnInitAsync()
-    {
-        var response = await Http.GetJsonAsync<SignalRConnectionInfo>("https://blazorfourinarowfunctions.azurewebsites.net/api/negotiate");
-
-        connection = new HubConnectionBuilder().WithUrl(response.Url, option =>
+    <ul>
+        <li>Messages:</li>
+        @foreach (var message in messages)
         {
-            option.AccessTokenProvider = () =>
+            <li>@message</li>
+        }
+    </ul>
+
+    @functions
+    {
+        string message;
+        IList<string> messages = new List<string>();
+        string url = "Default";
+        HubConnection connection;
+
+        protected override async Task OnInitAsync()
         {
-            JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
-            string AccessKey = "Le6jOFu9QnfvUp7c/sSfVXT8yFRmZazpmG2sX9+SZQU=";
+            var response = await Http.GetJsonAsync<SignalRConnectionInfo>("https://blazorfourinarowfunctions.azurewebsites.net/api/negotiate");
 
-            var token = JwtTokenHandler.CreateJwtSecurityToken(
-            issuer: null,
-            audience: response.Url,
-            subject: new ClaimsIdentity(new[]
-                {
-            new Claim(ClaimTypes.NameIdentifier, "James")
-                }),
-            expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccessKey)), SecurityAlgorithms.HmacSha256));
+            connection = new HubConnectionBuilder().WithUrl(response.Url, option =>
+            {
+                option.AccessTokenProvider = () =>
+            {
+                JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
+                string AccessKey = "Le6jOFu9QnfvUp7c/sSfVXT8yFRmZazpmG2sX9+SZQU=";
 
-            return Task.FromResult(JwtTokenHandler.WriteToken(token));
-        };
-        }).Build();
-        connection.On<string>("game-update", this.OnGameUpdate);
-        await connection.StartAsync();
-    }
+                var token = JwtTokenHandler.CreateJwtSecurityToken(
+                issuer: null,
+                audience: response.Url,
+                subject: new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.NameIdentifier, "James")
+                    }),
+                expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccessKey)), SecurityAlgorithms.HmacSha256));
 
-    Task OnGameUpdate(string gameUpdate)
-    {
-        messages.Add(gameUpdate);
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
+                return Task.FromResult(JwtTokenHandler.WriteToken(token));
+            };
+            }).Build();
+            connection.On<string>("game-update", this.OnGameUpdate);
+            await connection.StartAsync();
+        }
 
-    async Task SendAsync()
-    {
-        var response = await Http.PostAsync("https://blazorfourinarowfunctions.azurewebsites.net/api/game-action", new StringContent(message));
-    }
-}*@
+        Task OnGameUpdate(string gameUpdate)
+        {
+            messages.Add(gameUpdate);
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        async Task SendAsync()
+        {
+            var response = await Http.PostAsync("https://blazorfourinarowfunctions.azurewebsites.net/api/game-action", new StringContent(message));
+        }
+    }*@

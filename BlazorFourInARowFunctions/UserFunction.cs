@@ -15,6 +15,9 @@ namespace BlazorFourInARowFunctions
 {
     public class UserFunction
     {
+        private static readonly Uri DocumentCollectionUri =
+            UriFactory.CreateDocumentCollectionUri(databaseId: "blazor-four-in-a-row", collectionId: "game-actions");
+
         [FunctionName("user")]
         public static async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "POST")] HttpRequestMessage req,
@@ -34,43 +37,44 @@ namespace BlazorFourInARowFunctions
                 return new BadRequestObjectResult("Missing user object in POST body.");
             }
 
-            UserConnectionInfo userConnectionInfo = new UserConnectionInfo()
+            if (UserRegistrationGameActionAlreadyExists(client, user))
             {
-                Url = connectionInfo.Url,
-                AccessToken = connectionInfo.AccessToken,
-                User = user
-            };
-
-            Uri documentCollectionUri = UriFactory.CreateDocumentCollectionUri(databaseId: "blazor-four-in-a-row", collectionId: "game-actions");
-
-            using (IDocumentQuery<GameAction> documentQuery = client.CreateDocumentQuery<GameAction>(
-                documentCollectionUri)
-                .Where(g => g.User.UserId == user.UserId).AsDocumentQuery())
-            {
-                while (documentQuery.HasMoreResults)
-                {
-                    foreach (GameAction pg in await documentQuery.ExecuteNextAsync<GameAction>())
-                    {
-                        log.LogError($"A User with an id of ({user.UserId}) has already been registered.");
-                        return new ConflictObjectResult($"A User with an id of ({user.UserId}) has already been registered.");
-                    }
-                }
+                log.LogError($"A User with an id of ({user.UserId}) has already been registered.");
+                return new ConflictObjectResult($"A User with an id of ({user.UserId}) has already been registered.");
             }
 
             //TODO: Set user.DisplayColor;
 
-            GameAction userRegistrationGameAction = new GameAction()
+            await StoreRegisterUserGameAction(client, user);
+
+            log.LogInformation($"Created new user {user.DisplayName}. ({user.UserId})");
+            
+            return new OkObjectResult(new UserConnectionInfo()
+            {
+                Url = connectionInfo.Url,
+                AccessToken = connectionInfo.AccessToken,
+                User = user
+            });
+        }
+
+        private static bool UserRegistrationGameActionAlreadyExists(DocumentClient client, User user)
+        {
+            var userRegistrationGameAction = client
+                .CreateDocumentQuery<GameAction>(DocumentCollectionUri)
+                .Where(g => g.User.UserId == user.UserId && g.GameActionType == GameActionTypes.RegisterUser)
+                .AsEnumerable().FirstOrDefault();
+
+            return null != userRegistrationGameAction;
+        }
+
+        private static async Task StoreRegisterUserGameAction(DocumentClient client, User user)
+        {
+            await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
             {
                 User = user,
                 GameActionStatus = GameActionStatuses.Valid,
                 GameActionType = GameActionTypes.RegisterUser
-            };
-
-            await client.CreateDocumentAsync(documentCollectionUri, userRegistrationGameAction);
-
-            log.LogInformation($"Created new user {user.DisplayName}. ({user.UserId})");
-            
-            return new OkObjectResult(userConnectionInfo);
+            });
         }
     }
 }

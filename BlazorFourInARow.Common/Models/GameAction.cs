@@ -15,5 +15,9 @@ namespace BlazorFourInARow.Common.Models
         public GameActionStatuses GameActionStatus { get; set; }
 
         public GameActionTypes GameActionType { get; set; }
+
+        public GameSettings GameSettings { get; set; }
+
+        public DateTime CreatedOn { get; } = DateTime.Now;
     }
 }

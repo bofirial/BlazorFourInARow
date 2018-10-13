@@ -1,5 +1,5 @@
 @using BlazorFourInARow.BusinessLogic
-@using BlazorFourInARow.Common.Models
+
 @inherits Microsoft.AspNetCore.Blazor.Layouts.BlazorLayoutComponent
 
 @inject IUserConnectionInfoStore UserConnectionInfoStore
@@ -31,5 +31,7 @@
         SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfo());
 
         UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;
+
+        await base.OnInitAsync();
     }
 }
