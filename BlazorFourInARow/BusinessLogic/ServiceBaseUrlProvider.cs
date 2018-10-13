@@ -18,7 +18,7 @@ namespace BlazorFourInARow.BusinessLogic
                 return "http://localhost:7071";
             }
 
-            return "https://blazorfourinarowfunctions.azurewebsites.net";
+            return "https://blazorfourinarowfunctionapp.azurewebsites.net";
         }
     }
 }

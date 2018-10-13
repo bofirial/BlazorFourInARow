@@ -1,5 +1,8 @@
 ﻿using System;
 using BlazorFourInARow.Common.Models;
+using Microsoft.Azure.Documents;
+using Newtonsoft.Json;
+using User = BlazorFourInARow.Common.Models.User;
 
 namespace BlazorFourInARowFunctions.Models
 {
@@ -18,5 +21,8 @@ namespace BlazorFourInARowFunctions.Models
         public GameSettings GameSettings { get; set; }
 
         public DateTime CreatedOn { get; } = DateTime.Now;
+
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
     }
 }

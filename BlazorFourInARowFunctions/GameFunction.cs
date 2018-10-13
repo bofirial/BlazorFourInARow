@@ -46,9 +46,9 @@ namespace BlazorFourInARowFunctions
 
             if (null != currentGame)
             {
-                var gameActions = client.CreateDocumentQuery<GameAction>(documentCollectionUri)
-                    .Where(g => g.GameId == currentGame.GameId)
-                    .AsEnumerable().ToList();
+                var gameActionsProvider = new GameActionsProvider();
+
+                var gameActions = gameActionsProvider.GetGameActions(client, currentGame.GameId);
 
                 if (!gameActions.Any(g =>
                     g.GameActionType == GameActionTypes.CompleteGame ||

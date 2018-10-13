@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFourInARow", "BlazorF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFourInARowFunctions", "BlazorFourInARowFunctions\BlazorFourInARowFunctions.csproj", "{46DF37C6-7B62-4053-ABF3-65925D18912C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorFourInARow.Common", "BlazorFourInARow.Common\BlazorFourInARow.Common.csproj", "{3F0C397F-F926-4F46-A29B-EDEC3D4FA928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFourInARow.Common", "BlazorFourInARow.Common\BlazorFourInARow.Common.csproj", "{3F0C397F-F926-4F46-A29B-EDEC3D4FA928}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
