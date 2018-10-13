@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BlazorFourInARow.Common.Models
+﻿namespace BlazorFourInARowFunctions.Models
 {
     public enum GameActionStatuses
     {

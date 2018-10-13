@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BlazorFourInARow.Common.Models;
+using GameAction = BlazorFourInARowFunctions.Models.GameAction;
+using GameActionTypes = BlazorFourInARowFunctions.Models.GameActionTypes;
 
 namespace BlazorFourInARowFunctions.Game
 {

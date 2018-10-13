@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using BlazorFourInARow.Common.Models;
 
-namespace BlazorFourInARow.Common.Models
+namespace BlazorFourInARowFunctions.Models
 {
     public class GameAction
     {

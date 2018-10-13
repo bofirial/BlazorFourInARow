@@ -21,6 +21,7 @@ namespace BlazorFourInARow
             services.AddSingleton<IUserRegistrar, UserRegistrar>();
             services.AddSingleton<IServiceBaseUrlProvider, ServiceBaseUrlProvider>();
             services.AddSingleton<ICurrentGameStateProvider, CurrentGameStateProvider>();
+            services.AddSingleton<IGamePieceDropper, GamePieceDropper>();
         }
 
         public void Configure(IBlazorApplicationBuilder app)

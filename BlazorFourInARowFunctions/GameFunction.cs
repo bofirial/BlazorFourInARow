@@ -15,6 +15,8 @@ using Microsoft.Azure.Documents.Linq;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using GameAction = BlazorFourInARowFunctions.Models.GameAction;
+using GameActionTypes = BlazorFourInARowFunctions.Models.GameActionTypes;
 
 namespace BlazorFourInARowFunctions
 {

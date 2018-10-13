@@ -10,6 +10,9 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using GameAction = BlazorFourInARowFunctions.Models.GameAction;
+using GameActionStatuses = BlazorFourInARowFunctions.Models.GameActionStatuses;
+using GameActionTypes = BlazorFourInARowFunctions.Models.GameActionTypes;
 
 namespace BlazorFourInARowFunctions
 {
