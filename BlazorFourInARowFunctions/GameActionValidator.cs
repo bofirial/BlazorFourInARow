@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using BlazorFourInARow.Common;
 using BlazorFourInARow.Common.Validators;
 using BlazorFourInARowFunctions.Game;
 using BlazorFourInARowFunctions.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlazorFourInARowFunctions
 {
@@ -59,36 +54,48 @@ namespace BlazorFourInARowFunctions
                         updatedGameIds.Add(gameAction.GameId);
                     }
 
-                    if (gameAction.GameActionStatus == GameActionStatuses.AwaitingValidation)
+                    if (gameAction.GameActionStatus != GameActionStatuses.AwaitingValidation)
                     {
-                        log.LogInformation($"Validating Game Action {gameAction.Id}.");
+                        log.LogInformation($"Game Action {gameAction.Id} does not require validation.  GameActionType: {gameAction.GameActionType}");
+                    }
+                    log.LogInformation($"Validating Game Action {gameAction.Id}.");
 
-                        var gameActions = gameActionsProvider.GetGameActions(client, gameAction.GameId);
-                        var gameState = gameStateBuilder.BuildGameState(gameActions);
+                    var gameActions = gameActionsProvider.GetGameActions(client, gameAction.GameId);
+                    var gameState = gameStateBuilder.BuildGameState(gameActions);
 
-                        gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GamePosition.Column);
-                        
-                        foreach (var row in gameState.GameCells)
+                    gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GamePosition.Column);
+
+                    log.LogInformation(
+                        $"Game Action {gameAction.Id}'s status is {Enum.GetName(typeof(GameActionStatuses), gameAction.GameActionStatus)}.");
+
+                    foreach (var row in gameState.GameCells)
+                    {
+                        var gameCell = row[gameAction.GamePosition.Column];
+
+                        if (null == gameCell.Team)
                         {
-                            var gameCell = row[gameAction.GamePosition.Column];
+                            gameAction.GamePosition.Row = gameCell.GamePosition.Row;
 
-                            if (null == gameCell.Team)
-                            {
-                                gameAction.GamePosition.Row = gameCell.GamePosition.Row;
-                                break;
-                            }
+                            gameCell.Team = gameAction.Team;
+                            gameCell.User = gameAction.User;
+                            break;
                         }
-                        
-                        log.LogInformation($"Game Action {gameAction.Id} is valid.");
-
-                        await client.UpsertDocumentAsync(DocumentCollectionUri, gameAction);
-
-                        //TODO: Check for Game Victory
-
-                        continue;
                     }
 
-                    log.LogInformation($"Game Action {gameAction.Id} does not require validation.  GameActionType: {gameAction.GameActionType}");
+                    await client.UpsertDocumentAsync(DocumentCollectionUri, gameAction);
+
+                    var gameResult = gameStateManager.CheckForGameCompletion(gameState);
+
+                    if (null != gameResult)
+                    {
+                        await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
+                        {
+                            GameId = gameAction.GameId,
+                            GameActionStatus = GameActionStatuses.Valid,
+                            GameActionType = GameActionTypes.CompleteGame,
+                            Team = gameResult.WinningTeam
+                        });
+                    }
                 }
 
                 foreach (var gameId in updatedGameIds)
@@ -100,7 +107,7 @@ namespace BlazorFourInARowFunctions
                         {
                             Target = "game-state-update",
                             Arguments = new object[] { gameStateBuilder.BuildGameState(gameActions) }
-                        }); 
+                        });
                 }
             }
         }

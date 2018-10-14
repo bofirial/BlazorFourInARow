@@ -13,5 +13,7 @@ namespace BlazorFourInARow.Common.Models
         public decimal TurnDelaySeconds { get; set; }
 
         public int Teams { get; set; }
+
+        public int PiecesInARowToWin { get; set; }
     }
 }

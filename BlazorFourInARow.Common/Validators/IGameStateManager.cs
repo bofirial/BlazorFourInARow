@@ -10,5 +10,7 @@ namespace BlazorFourInARow.Common.Validators
         bool UserHasJoinedGame(GameState gameState, User user);
 
         GameActionStatuses ValidateGameColumnAction(GameState gameState, int column);
+
+        GameResult CheckForGameCompletion(GameState gameState);
     }
 }

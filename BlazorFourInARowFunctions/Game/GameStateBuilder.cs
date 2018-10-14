@@ -20,7 +20,7 @@ namespace BlazorFourInARowFunctions.Game
                 throw new ApplicationException("Missing CreateGameAction");
             }
 
-            GameState gameState = CreateGameState(createGameAction);
+            var gameState = CreateGameState(createGameAction);
 
             foreach (var gameAction in gameActions)
             {
