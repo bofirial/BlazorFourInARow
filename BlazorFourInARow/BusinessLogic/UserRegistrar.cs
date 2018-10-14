@@ -10,11 +10,11 @@ namespace BlazorFourInARow.BusinessLogic
     public class UserRegistrar : IUserRegistrar
     {
         private readonly IUserConnectionInfoStore _currentUserStore;
-        private readonly ILogger<UserConnectionInfoStore> _logger;
+        private readonly ILogger<UserRegistrar> _logger;
         private readonly HttpClient _httpClient;
         private readonly IServiceBaseUrlProvider _serviceBaseUrlProvider;
 
-        public UserRegistrar(IUserConnectionInfoStore currentUserStore, ILogger<UserConnectionInfoStore> logger,
+        public UserRegistrar(IUserConnectionInfoStore currentUserStore, ILogger<UserRegistrar> logger,
             HttpClient httpClient, IServiceBaseUrlProvider serviceBaseUrlProvider)
         {
             _currentUserStore = currentUserStore;

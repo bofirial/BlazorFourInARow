@@ -16,12 +16,12 @@ using Newtonsoft.Json;
 
 namespace BlazorFourInARowFunctions
 {
-    public static class PlaceGamePieceGameActionValidator
+    public static class GameActionValidator
     {
         private static readonly Uri DocumentCollectionUri =
             UriFactory.CreateDocumentCollectionUri(databaseId: "blazor-four-in-a-row", collectionId: "game-actions");
 
-        [FunctionName("place-game-piece-game-action-validator")]
+        [FunctionName("game-action-validator")]
         public static async Task RunAsync([CosmosDBTrigger(
             databaseName: "blazor-four-in-a-row",
             collectionName: "game-actions",
@@ -48,6 +48,11 @@ namespace BlazorFourInARowFunctions
                 {
                     GameAction gameAction = (dynamic)document;
 
+                    if (!updatedGameIds.Contains(gameAction.GameId))
+                    {
+                        updatedGameIds.Add(gameAction.GameId);
+                    }
+
                     if (gameAction.GameActionStatus == GameActionStatuses.AwaitingValidation)
                     {
                         log.LogInformation($"Validating Game Action {gameAction.Id}.");
@@ -61,11 +66,6 @@ namespace BlazorFourInARowFunctions
                         await client.UpsertDocumentAsync(DocumentCollectionUri, gameAction);
 
                         //TODO: Check for Game Victory
-
-                        if (!updatedGameIds.Contains(gameAction.GameId))
-                        {
-                            updatedGameIds.Add(gameAction.GameId);
-                        }
 
                         continue;
                     }

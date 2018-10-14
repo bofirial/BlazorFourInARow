@@ -1,6 +1,7 @@
 using Blazor.Extensions.Logging;
 using Blazor.Extensions.Storage;
 using BlazorFourInARow.BusinessLogic;
+using BlazorFourInARow.Common.Validators;
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,9 @@ namespace BlazorFourInARow
             services.AddSingleton<ICurrentGameStateProvider, CurrentGameStateProvider>();
             services.AddSingleton<IGamePieceDropper, GamePieceDropper>();
             services.AddSingleton<ISignalRConnectionFactory, SignalRConnectionFactory>();
+            services.AddSingleton<IGameJoiner, GameJoiner>();
+
+            services.AddSingleton<IGameStateValidator, GameStateValidator>();
         }
 
         public void Configure(IBlazorApplicationBuilder app)

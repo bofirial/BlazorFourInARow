@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Blazor.Extensions;
 using BlazorFourInARow.BusinessLogic;
 using BlazorFourInARow.Common.Models;
+using BlazorFourInARow.Common.Validators;
 using Microsoft.AspNetCore.Blazor.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +21,8 @@ namespace BlazorFourInARow.Pages.Game
 
         public UserConnectionInfo UserConnectionInfo { get; set; }
 
+        public Team Team { get; set; }
+
         [Inject]
         protected ICurrentGameStateProvider CurrentGameStateProvider { get; set; }
 
@@ -30,15 +33,21 @@ namespace BlazorFourInARow.Pages.Game
         protected ISignalRConnectionFactory SignalRConnectionFactory { get; set; }
 
         [Inject]
+        protected IGameStateValidator GameStateValidator { get; set; }
+
+        [Inject]
+        protected IGameJoiner GameJoiner { get; set; }
+
+        [Inject]
         protected ILogger<GameBase> Logger { get; set; }
 
         protected override async Task OnInitAsync()
         {
-            GameState = await CurrentGameStateProvider.GetCurrentGameStateAsync();
+            UserConnectionInfo = await UserConnectionInfoStore.GetUserConnectionInfoAsync();
+            
+            await UpdateGameState(await CurrentGameStateProvider.GetCurrentGameStateAsync());
 
             Logger.LogInformation($"GameState set for game: ({GameState?.GameId}): {Newtonsoft.Json.JsonConvert.SerializeObject(GameState)}");
-
-            UserConnectionInfo = await UserConnectionInfoStore.GetUserConnectionInfoAsync();
 
             var connection = SignalRConnectionFactory.CreateSignalRHubConnection(UserConnectionInfo);
 
@@ -46,14 +55,28 @@ namespace BlazorFourInARow.Pages.Game
             await connection.StartAsync();
         }
 
-        protected Task OnGameUpdate(GameState gameState)
+        protected async Task OnGameUpdate(GameState gameState)
         {
             Logger.LogInformation($"GameState updated for game: ({gameState?.GameId}): {Newtonsoft.Json.JsonConvert.SerializeObject(gameState)}");
 
-            GameState = gameState;
+            await UpdateGameState(gameState);
 
             StateHasChanged();
-            return Task.CompletedTask;
+        }
+
+        protected async Task UpdateGameState(GameState gameState)
+        {
+            GameState = gameState;
+
+            if (!GameStateValidator.UserHasJoinedGame(gameState, UserConnectionInfo.User))
+            {
+                Team = await GameJoiner.JoinGameAsync(gameState.GameId, UserConnectionInfo.User);
+            }
+            else
+            {
+                Team = gameState.Teams.FirstOrDefault(t =>
+                    t.Users.Any(u => u.UserId == UserConnectionInfo.User.UserId));
+            }
         }
     }
 }
