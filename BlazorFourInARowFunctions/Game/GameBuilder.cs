@@ -2,7 +2,7 @@
 using BlazorFourInARow.Common.Models;
 using Microsoft.Azure.Documents.Client;
 using GameAction = BlazorFourInARowFunctions.Models.GameAction;
-using GameActionStatuses = BlazorFourInARowFunctions.Models.GameActionStatuses;
+using GameActionStatuses = BlazorFourInARow.Common.GameActionStatuses;
 using GameActionTypes = BlazorFourInARowFunctions.Models.GameActionTypes;
 
 namespace BlazorFourInARowFunctions.Game

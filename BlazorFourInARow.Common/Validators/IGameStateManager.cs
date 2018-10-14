@@ -5,8 +5,10 @@ using BlazorFourInARow.Common.Models;
 
 namespace BlazorFourInARow.Common.Validators
 {
-    public interface IGameStateValidator
+    public interface IGameStateManager
     {
         bool UserHasJoinedGame(GameState gameState, User user);
+
+        GameActionStatuses ValidateGameColumnAction(GameState gameState, int column);
     }
 }

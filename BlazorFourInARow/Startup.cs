@@ -26,7 +26,7 @@ namespace BlazorFourInARow
             services.AddSingleton<ISignalRConnectionFactory, SignalRConnectionFactory>();
             services.AddSingleton<IGameJoiner, GameJoiner>();
 
-            services.AddSingleton<IGameStateValidator, GameStateValidator>();
+            services.AddSingleton<IGameStateManager, GameStateManager>();
         }
 
         public void Configure(IBlazorApplicationBuilder app)

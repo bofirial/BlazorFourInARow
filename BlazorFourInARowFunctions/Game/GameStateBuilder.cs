@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BlazorFourInARow.Common;
 using BlazorFourInARow.Common.Models;
 using BlazorFourInARowFunctions.Models;
 using GameAction = BlazorFourInARowFunctions.Models.GameAction;

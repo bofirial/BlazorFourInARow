@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorFourInARow.Common;
+using BlazorFourInARow.Common.Validators;
 using BlazorFourInARowFunctions.Game;
 using BlazorFourInARowFunctions.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +46,7 @@ namespace BlazorFourInARowFunctions
 
                 var gameStateBuilder = new GameStateBuilder();
                 var gameActionsProvider = new GameActionsProvider();
+                var gameStateManager = new GameStateManager();
 
                 var updatedGameIds = new List<string>();
 
@@ -63,10 +66,8 @@ namespace BlazorFourInARowFunctions
                         var gameActions = gameActionsProvider.GetGameActions(client, gameAction.GameId);
                         var gameState = gameStateBuilder.BuildGameState(gameActions);
 
-                        //TODO: Validate Game Action Here
-                        gameAction.GameActionStatus = GameActionStatuses.Valid;
-
-
+                        gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GamePosition.Column);
+                        
                         foreach (var row in gameState.GameCells)
                         {
                             var gameCell = row[gameAction.GamePosition.Column];

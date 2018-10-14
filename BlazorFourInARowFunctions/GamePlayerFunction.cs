@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BlazorFourInARow.Common;
 using BlazorFourInARow.Common.Models;
 using BlazorFourInARow.Common.Validators;
 using BlazorFourInARowFunctions.Game;
@@ -43,9 +44,9 @@ namespace BlazorFourInARowFunctions
 
             var gameState = gameStateBuilder.BuildGameState(gameActions);
 
-            var gameStateValidator = new GameStateValidator();
+            var gameStateManager = new GameStateManager();
 
-            if (gameStateValidator.UserHasJoinedGame(gameState, gamePlayer.User))
+            if (gameStateManager.UserHasJoinedGame(gameState, gamePlayer.User))
             {
                 return new ConflictResult();
             }

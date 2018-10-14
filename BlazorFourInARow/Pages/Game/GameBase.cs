@@ -33,7 +33,7 @@ namespace BlazorFourInARow.Pages.Game
         protected ISignalRConnectionFactory SignalRConnectionFactory { get; set; }
 
         [Inject]
-        protected IGameStateValidator GameStateValidator { get; set; }
+        protected IGameStateManager GameStateManager { get; set; }
 
         [Inject]
         protected IGameJoiner GameJoiner { get; set; }
@@ -68,7 +68,7 @@ namespace BlazorFourInARow.Pages.Game
         {
             GameState = gameState;
 
-            if (!GameStateValidator.UserHasJoinedGame(gameState, UserConnectionInfo.User))
+            if (!GameStateManager.UserHasJoinedGame(gameState, UserConnectionInfo.User))
             {
                 Team = await GameJoiner.JoinGameAsync(gameState.GameId, UserConnectionInfo.User);
             }
