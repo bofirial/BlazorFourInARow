@@ -38,7 +38,7 @@ namespace BlazorFourInARowFunctions.Game
                     case GameActionTypes.PlaceGamePiece:
                         var gameCell = gameState.GameCells[gameAction.GamePosition.Row.Value][gameAction.GamePosition.Column];
 
-                        gameCell.Team = gameAction.User.Team;
+                        gameCell.Team = gameAction.Team;
                         gameCell.User = gameAction.User;
                         break;
                     case GameActionTypes.CompleteGame:

@@ -73,8 +73,7 @@ namespace BlazorFourInARowFunctions
 
                             if (null == gameCell.Team)
                             {
-                                gameCell.Team = gameAction.Team;
-                                gameCell.User = gameAction.User;
+                                gameAction.GamePosition.Row = gameCell.GamePosition.Row;
                                 break;
                             }
                         }

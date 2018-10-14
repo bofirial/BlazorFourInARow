@@ -28,6 +28,7 @@
 
     protected override async Task OnInitAsync()
     {
+        //TODO: UserConnectionInfo can expire.  Cached SignalR connections need to be able to refresh without registering a new user
         SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfoAsync());
 
         UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;

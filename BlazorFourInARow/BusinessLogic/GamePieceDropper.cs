@@ -23,7 +23,7 @@ namespace BlazorFourInARow.BusinessLogic
             _logger = logger;
         }
 
-        public async Task DropGamePieceAsync(int column, string gameId)
+        public async Task DropGamePieceAsync(int column, string gameId, Team team)
         {
             var userConnectionInfo = await _userConnectionInfoStore.GetUserConnectionInfoAsync();
 
@@ -36,6 +36,7 @@ namespace BlazorFourInARow.BusinessLogic
                     Column = column,
                     User = userConnectionInfo.User,
                     GameId = gameId,
+                    Team = team
                 });
         }
     }

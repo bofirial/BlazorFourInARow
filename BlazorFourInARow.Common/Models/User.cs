@@ -11,7 +11,5 @@ namespace BlazorFourInARow.Common.Models
         public string DisplayName { get; set; }
 
         public string DisplayColor { get; set; }
-
-        public Team Team { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace BlazorFourInARow.BusinessLogic
         {
             var userConnectionInfo = await _localStorage.GetItem<UserConnectionInfo>(KEY);
 
-            _logger.LogDebug($"User Object Information.  IsNull = {null == userConnectionInfo}.  ID = {userConnectionInfo?.User?.UserId}");
+            _logger.LogInformation($"User Object Information.  IsNull = {null == userConnectionInfo}.  ID = {userConnectionInfo?.User?.UserId}");
 
             return userConnectionInfo;
         }

@@ -2,8 +2,11 @@
 
 @inherits BlazorFourInARow.Pages.Game.GameBase
 
-<GameBoard GameCells="@GameState?.GameCells" GameId="@GameState?.GameId"/>
+<GameBoard GameCells="@GameState?.GameCells" GameId="@GameState?.GameId" Team="@Team"/>
 
-<h1>@Team.DisplayColor Team</h1>
+@if (null != @Team)
+{
+    <h1>@Team.DisplayColor Team</h1>
+}
 
 <p>@GameState?.DebugMessage</p>

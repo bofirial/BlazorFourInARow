@@ -77,8 +77,6 @@ namespace BlazorFourInARow.Pages.Game
                 Team = gameState.Teams.FirstOrDefault(t =>
                     t.Users.Any(u => u.UserId == UserConnectionInfo.User.UserId));
             }
-
-            UserConnectionInfo.User.Team = Team;
         }
     }
 }

@@ -13,5 +13,7 @@ namespace BlazorFourInARow.Common.Models
         public int Column { get; set; }
 
         public User User { get; set; }
+
+        public Team Team { get; set; }
     }
 }

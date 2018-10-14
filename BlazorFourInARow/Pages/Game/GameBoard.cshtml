@@ -1,6 +1,6 @@
 ﻿@using BlazorFourInARow.BusinessLogic
 
-<div class="game-board d-flex flex-column position-relative">
+<div class="game-board d-flex flex-column-reverse position-relative">
     @if (null != GameCells)
     {
         <ol class="d-flex flex-row list-unstyled m-0 position-absolute w-100 buttons">
@@ -20,7 +20,7 @@
                  @foreach (var cell in row)
                  {
                      <li class="cell">
-                         <span class="cell @cell?.Team?.DisplayColor"></span>
+                         <span class="game-piece @cell?.Team?.DisplayColor"></span>
                      </li>
                  }
              </ol>
@@ -34,14 +34,17 @@
     string GameId { get; set; }
 
     [Parameter]
-    List<List<GameCell>> GameCells { get; set; }
+    Team Team { get; set; }
 
+    [Parameter]
+    List<List<GameCell>> GameCells { get; set; }
+    
     [Inject]
     IGamePieceDropper GamePieceDropper { get; set; }
 
     async Task PlaceGamePiece(int column)
     {
-        await GamePieceDropper.DropGamePieceAsync(column, GameId);
+        await GamePieceDropper.DropGamePieceAsync(column, GameId, Team);
 
         //TODO: Disable Buttons
         //TODO: Start Timer
