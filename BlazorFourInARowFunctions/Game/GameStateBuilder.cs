@@ -36,6 +36,10 @@ namespace BlazorFourInARowFunctions.Game
                     case GameActionTypes.LeaveGame:
                         break;
                     case GameActionTypes.PlaceGamePiece:
+                        var gameCell = gameState.GameCells[gameAction.GamePosition.Row.Value][gameAction.GamePosition.Column];
+
+                        gameCell.Team = gameAction.User.Team;
+                        gameCell.User = gameAction.User;
                         break;
                     case GameActionTypes.CompleteGame:
                         break;

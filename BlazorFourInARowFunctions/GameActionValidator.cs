@@ -58,6 +58,7 @@ namespace BlazorFourInARowFunctions
                         log.LogInformation($"Validating Game Action {gameAction.Id}.");
 
                         //TODO: Validate Game Action Here
+                        //TODO: Set GamePiece Row
 
                         gameAction.GameActionStatus = GameActionStatuses.Valid;
 
