@@ -9,6 +9,7 @@ using Blazor.Extensions;
 using BlazorFourInARow.BusinessLogic;
 using BlazorFourInARow.Common.Models;
 using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BlazorFourInARow.Pages.Game
@@ -28,9 +29,14 @@ namespace BlazorFourInARow.Pages.Game
         [Inject]
         protected ISignalRConnectionFactory SignalRConnectionFactory { get; set; }
 
+        [Inject]
+        protected ILogger<GameBase> Logger { get; set; }
+
         protected override async Task OnInitAsync()
         {
             GameState = await CurrentGameStateProvider.GetCurrentGameStateAsync();
+
+            Logger.LogInformation($"GameState set for game: ({GameState?.GameId}): {Newtonsoft.Json.JsonConvert.SerializeObject(GameState)}");
 
             UserConnectionInfo = await UserConnectionInfoStore.GetUserConnectionInfoAsync();
 
@@ -42,6 +48,8 @@ namespace BlazorFourInARow.Pages.Game
 
         protected Task OnGameUpdate(GameState gameState)
         {
+            Logger.LogInformation($"GameState updated for game: ({gameState?.GameId}): {Newtonsoft.Json.JsonConvert.SerializeObject(gameState)}");
+
             GameState = gameState;
 
             StateHasChanged();

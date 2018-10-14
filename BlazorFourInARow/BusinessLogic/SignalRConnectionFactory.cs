@@ -17,22 +17,23 @@ namespace BlazorFourInARow.BusinessLogic
             {
                 option.AccessTokenProvider = () =>
                 {
-                    JwtSecurityTokenHandler jwtTokenHandler = new JwtSecurityTokenHandler();
-                    string accessKey = userConnectionInfo.AccessToken;
+                    return Task.FromResult(userConnectionInfo.AccessToken);
+                    //var jwtTokenHandler = new JwtSecurityTokenHandler();
+                    //var accessKey = userConnectionInfo.AccessToken;
 
-                    var token = jwtTokenHandler.CreateJwtSecurityToken(
-                        issuer: null,
-                        audience: userConnectionInfo.Url,
-                        subject: new ClaimsIdentity(new[]
-                        {
-                            new Claim(ClaimTypes.NameIdentifier, "James")
-                        }),
-                        expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
-                        signingCredentials: new SigningCredentials(
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessKey)),
-                            SecurityAlgorithms.HmacSha256));
+                    //var token = jwtTokenHandler.CreateJwtSecurityToken(
+                    //    issuer: null,
+                    //    audience: userConnectionInfo.Url,
+                    //    subject: new ClaimsIdentity(new[]
+                    //    {
+                    //        new Claim(ClaimTypes.NameIdentifier, userConnectionInfo.User.DisplayName)
+                    //    }),
+                    //    expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
+                    //    signingCredentials: new SigningCredentials(
+                    //        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessKey)),
+                    //        SecurityAlgorithms.HmacSha256));
 
-                    return Task.FromResult(jwtTokenHandler.WriteToken(token));
+                    //return Task.FromResult(jwtTokenHandler.WriteToken(token));
                 };
             }).Build();
         }

@@ -31,7 +31,8 @@ namespace BlazorFourInARowFunctions
             [CosmosDB(
                 databaseName: "blazor-four-in-a-row",
                 collectionName: "game-actions",
-                ConnectionStringSetting = "CosmosDBConnection")]
+                ConnectionStringSetting = "CosmosDBConnection",
+                CreateIfNotExists = true)]
             DocumentClient client, ILogger log)
         {
             Uri documentCollectionUri = UriFactory.CreateDocumentCollectionUri(databaseId: "blazor-four-in-a-row", collectionId: "game-actions");
@@ -60,6 +61,8 @@ namespace BlazorFourInARowFunctions
             }
 
             var gameAction = await CreateNewGameAction(client);
+
+            //TODO: Broadcast SignalR Update
 
             return new OkObjectResult(gameStateBuilder.BuildGameState(new List<GameAction>() { gameAction }));
         }

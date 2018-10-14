@@ -20,6 +20,7 @@ namespace BlazorFourInARowFunctions.Game
 
             var gameState = new GameState
             {
+                GameId = createGameAction.GameId,
                 GameCells = new List<List<GameCell>>()
             };
 
@@ -41,6 +42,8 @@ namespace BlazorFourInARowFunctions.Game
                     });
                 }
             }
+
+            gameState.DebugMessage = $"{gameActions.Count} Game Actions in this game ({createGameAction.GameId}).";
 
             return gameState;
         }

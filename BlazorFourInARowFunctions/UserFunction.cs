@@ -28,7 +28,8 @@ namespace BlazorFourInARowFunctions
             [CosmosDB(
                 databaseName: "blazor-four-in-a-row",
                 collectionName: "game-actions",
-                ConnectionStringSetting = "CosmosDBConnection")]
+                ConnectionStringSetting = "CosmosDBConnection",
+                CreateIfNotExists = true)]
             DocumentClient client,
             ILogger log)
         {
