@@ -35,7 +35,7 @@ namespace BlazorFourInARow.BusinessLogic
                 {
                     Column = column,
                     User = userConnectionInfo.User,
-                    GameId = gameId
+                    GameId = gameId,
                 });
         }
     }

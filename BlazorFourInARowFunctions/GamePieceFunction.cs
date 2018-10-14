@@ -39,7 +39,8 @@ namespace BlazorFourInARowFunctions
                 GameActionType = GameActionTypes.PlaceGamePiece,
                 GameId = gamePiece.GameId,
                 GamePosition = gamePiece,
-                User = gamePiece.User
+                User = gamePiece.User,
+                Team = gamePiece.User.Team
             });
 
             return new OkResult();

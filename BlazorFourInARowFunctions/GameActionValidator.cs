@@ -40,7 +40,10 @@ namespace BlazorFourInARowFunctions
         {
             if (input != null && input.Count > 0)
             {
-                log.LogInformation("Documents modified " + input.Count);
+                log.LogInformation("GameActions modified " + input.Count);
+
+                var gameStateBuilder = new GameStateBuilder();
+                var gameActionsProvider = new GameActionsProvider();
 
                 var updatedGameIds = new List<string>();
 
@@ -57,11 +60,25 @@ namespace BlazorFourInARowFunctions
                     {
                         log.LogInformation($"Validating Game Action {gameAction.Id}.");
 
-                        //TODO: Validate Game Action Here
-                        //TODO: Set GamePiece Row
+                        var gameActions = gameActionsProvider.GetGameActions(client, gameAction.GameId);
+                        var gameState = gameStateBuilder.BuildGameState(gameActions);
 
+                        //TODO: Validate Game Action Here
                         gameAction.GameActionStatus = GameActionStatuses.Valid;
 
+
+                        foreach (var row in gameState.GameCells)
+                        {
+                            var gameCell = row[gameAction.GamePosition.Column];
+
+                            if (null == gameCell.Team)
+                            {
+                                gameCell.Team = gameAction.Team;
+                                gameCell.User = gameAction.User;
+                                break;
+                            }
+                        }
+                        
                         log.LogInformation($"Game Action {gameAction.Id} is valid.");
 
                         await client.UpsertDocumentAsync(DocumentCollectionUri, gameAction);
@@ -73,9 +90,6 @@ namespace BlazorFourInARowFunctions
 
                     log.LogInformation($"Game Action {gameAction.Id} does not require validation.  GameActionType: {gameAction.GameActionType}");
                 }
-
-                var gameStateBuilder = new GameStateBuilder();
-                var gameActionsProvider = new GameActionsProvider();
 
                 foreach (var gameId in updatedGameIds)
                 {
