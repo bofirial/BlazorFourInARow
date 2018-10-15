@@ -4,7 +4,9 @@
 
 @inject IUserConnectionInfoStore UserConnectionInfoStore
 
-<HeaderNavigation CurrentUser="@UserConnectionInfo?.User"/>
+@inject ApplicationReseter ApplicationReseter
+
+<HeaderNavigation CurrentUser="@UserConnectionInfo?.User" />
 
 <div class="main content px-4 pt-1">
     @if (null != UserConnectionInfo)
@@ -15,22 +17,27 @@
     {
         <UserRegistration />
     }
+
+    <div class="temp application-reseter mt-5">
+        <!--//TODO: Don't forget to remove the javascript from index.html when you remove this!!!-->
+        <button class="btn btn-danger mt-5" onclick="@ApplicationReseter.ResetApplication">Reset Application / Wipe Database</button>
+    </div>
 </div>
 
 @functions {
-    public UserConnectionInfo UserConnectionInfo = null;
+public UserConnectionInfo UserConnectionInfo = null;
 
-    protected void SetUserConnectionInfo(UserConnectionInfo userConnectionInfo)
-    {
-        UserConnectionInfo = userConnectionInfo;
-        StateHasChanged();
-    }
+protected void SetUserConnectionInfo(UserConnectionInfo userConnectionInfo)
+{
+    UserConnectionInfo = userConnectionInfo;
+    StateHasChanged();
+}
 
-    protected override async Task OnInitAsync()
-    {
-        //TODO: UserConnectionInfo can expire.  Cached SignalR connections need to be able to refresh without registering a new user
-        SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfoAsync());
+protected override async Task OnInitAsync()
+{
+    //TODO: UserConnectionInfo can expire.  Cached SignalR connections need to be able to refresh without registering a new user
+    SetUserConnectionInfo(await UserConnectionInfoStore.GetUserConnectionInfoAsync());
 
-        UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;
-    }
+    UserConnectionInfoStore.UserConnectionInfoChanged += SetUserConnectionInfo;
+}
 }
