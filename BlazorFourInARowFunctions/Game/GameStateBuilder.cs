@@ -41,8 +41,14 @@ namespace BlazorFourInARowFunctions.Game
 
                         gameCell.Team = gameAction.Team;
                         gameCell.User = gameAction.User;
+
                         break;
                     case GameActionTypes.CompleteGame:
+                        gameState.GameResult = new GameResult()
+                        {
+                            WinningTeam = gameAction.Team
+                        };
+
                         break;
                     case GameActionTypes.AbandonGame:
                         break;
@@ -78,7 +84,8 @@ namespace BlazorFourInARowFunctions.Game
                         DisplayColor = "Black",
                         Users = new List<User>()
                     }
-                }
+                },
+                GameSettings = createGameAction.GameSettings
             };
 
 

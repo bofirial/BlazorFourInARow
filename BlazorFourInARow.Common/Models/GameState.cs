@@ -12,6 +12,8 @@ namespace BlazorFourInARow.Common.Models
 
         public List<Team> Teams { get; set; }
 
+        public GameResult GameResult { get; set; }
+
         public GameSettings GameSettings { get; set; }
 
         public string DebugMessage { get; set; }

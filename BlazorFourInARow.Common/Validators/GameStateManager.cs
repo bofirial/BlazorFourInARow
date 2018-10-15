@@ -32,7 +32,11 @@ namespace BlazorFourInARow.Common.Validators
                 return GameActionStatuses.InvalidColumnFull;
             }
 
-            //TODO: Validate Game is Over
+            if (null != gameState.GameResult)
+            {
+                return GameActionStatuses.InvalidGameHasEnded;
+            }
+
             //TODO: Validate GameAction Is Too Soon
 
             return GameActionStatuses.Valid;
@@ -53,7 +57,7 @@ namespace BlazorFourInARow.Common.Validators
                         gameBoardIsFull = false;
                     }
 
-                    if (GameCellIsStartOfVictoryRow(gameCell, gameState))
+                    if (gameCell.Team != null && GameCellIsStartOfVictoryRow(gameCell, gameState))
                     {
                         return new GameResult() { WinningTeam = gameCell.Team };
                     }
@@ -70,19 +74,25 @@ namespace BlazorFourInARow.Common.Validators
 
         public bool GameCellIsStartOfVictoryRow(GameCell gameCell, GameState gameState)
         {
-            var victoryConditions = new List<(bool IsMatch, int RowTransform, int ColumnTransform)>()
+            if (gameCell.Team == null)
             {
-                (IsMatch: true, RowTransform: 1, ColumnTransform: 0), //Horizontal
-                (IsMatch: true, RowTransform: 0, ColumnTransform: 1), //Vertical
-                (IsMatch: true, RowTransform: -1, ColumnTransform: 1), //Diagonal Up Left
-                (IsMatch: true, RowTransform: 1, ColumnTransform: 1), //Diagonal Up Right
+                return false;
+            }
+
+            var victoryConditions = new List<VictoryCondition>()
+            {
+                new VictoryCondition() {IsMatch = true, RowTransform = 1, ColumnTransform = 0}, //Horizontal
+                new VictoryCondition() {IsMatch = true, RowTransform = 0, ColumnTransform = 1}, //Vertical
+                new VictoryCondition() {IsMatch = true, RowTransform = -1, ColumnTransform = 1}, //Diagonal Up Left
+                new VictoryCondition() {IsMatch = true, RowTransform = 1, ColumnTransform = 1}, //Diagonal Up Right
             };
 
-            for (var i = 0; i < gameState.GameSettings.PiecesInARowToWin; i++)
+            for (var i = 1; i < gameState.GameSettings.PiecesInARowToWin; i++)
             {
-                for (var j = 0; j < victoryConditions.Count; j++)
+                //for (var j = 0; j < victoryConditions.Count; j++)
+                foreach (var victoryCondition in victoryConditions)
                 {
-                    var victoryCondition = victoryConditions[j];
+                    //var victoryCondition = victoryConditions[j];
 
                     if (victoryCondition.IsMatch)
                     {
@@ -103,12 +113,21 @@ namespace BlazorFourInARow.Common.Validators
 
                         var targetCell = gameState.GameCells[targetRow][targetColumn];
 
-                        victoryCondition.IsMatch = targetCell.Team.TeamId == gameCell.Team.TeamId;
+                        victoryCondition.IsMatch = victoryCondition.IsMatch && targetCell?.Team?.TeamId == gameCell.Team.TeamId;
                     }
                 }
             }
 
             return victoryConditions.Any(v => v.IsMatch);
         }
+    }
+
+    public class VictoryCondition
+    {
+        public bool IsMatch { get; set; }
+
+        public short RowTransform { get; set; }
+
+        public short ColumnTransform { get; set; }
     }
 }

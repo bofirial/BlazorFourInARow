@@ -57,7 +57,10 @@ namespace BlazorFourInARowFunctions
                     if (gameAction.GameActionStatus != GameActionStatuses.AwaitingValidation)
                     {
                         log.LogInformation($"Game Action {gameAction.Id} does not require validation.  GameActionType: {gameAction.GameActionType}");
+
+                        continue;
                     }
+
                     log.LogInformation($"Validating Game Action {gameAction.Id}.");
 
                     var gameActions = gameActionsProvider.GetGameActions(client, gameAction.GameId);
@@ -84,17 +87,20 @@ namespace BlazorFourInARowFunctions
 
                     await client.UpsertDocumentAsync(DocumentCollectionUri, gameAction);
 
-                    var gameResult = gameStateManager.CheckForGameCompletion(gameState);
-
-                    if (null != gameResult)
+                    if (null == gameState.GameResult)
                     {
-                        await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
+                        var gameResult = gameStateManager.CheckForGameCompletion(gameState);
+
+                        if (null != gameResult)
                         {
-                            GameId = gameAction.GameId,
-                            GameActionStatus = GameActionStatuses.Valid,
-                            GameActionType = GameActionTypes.CompleteGame,
-                            Team = gameResult.WinningTeam
-                        });
+                            await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
+                            {
+                                GameId = gameAction.GameId,
+                                GameActionStatus = GameActionStatuses.Valid,
+                                GameActionType = GameActionTypes.CompleteGame,
+                                Team = gameResult.WinningTeam
+                            });
+                        }
                     }
                 }
 
