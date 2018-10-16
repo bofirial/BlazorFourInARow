@@ -52,13 +52,20 @@ namespace BlazorFourInARowFunctions
             await StoreRegisterUserGameAction(client, user);
 
             log.LogInformation($"Created new user {user.DisplayName}. ({user.UserId})");
-            
+
             return new OkObjectResult(new UserConnectionInfo()
             {
-                Url = connectionInfo.Url,
+                //Url = connectionInfo.Url,
+                Url = GetSignalRUrl(connectionInfo),
                 AccessToken = connectionInfo.AccessToken,
                 User = user
             });
+        }
+
+        private static string GetSignalRUrl(SignalRConnectionInfo connectionInfo)
+        {
+            return new Uri(connectionInfo.Url).GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port,
+                                UriFormat.UriEscaped);
         }
 
         private static bool UserRegistrationGameActionAlreadyExists(DocumentClient client, User user)

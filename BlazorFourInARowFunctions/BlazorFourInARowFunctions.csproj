@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="3.0.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.SignalRService" Version="1.0.0-preview1-10002" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.23" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BlazorFourInARow.Common\BlazorFourInARow.Common.csproj" />
