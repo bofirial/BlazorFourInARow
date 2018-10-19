@@ -64,6 +64,7 @@ namespace BlazorFourInARowFunctions
 
         private static string GetSignalRUrl(SignalRConnectionInfo connectionInfo)
         {
+            //Drop the port from the SignalRConnectionInfo to use 443 instead.
             return new Uri(connectionInfo.Url).GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port,
                                 UriFormat.UriEscaped);
         }
