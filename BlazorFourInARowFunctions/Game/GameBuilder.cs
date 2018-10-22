@@ -25,7 +25,8 @@ namespace BlazorFourInARowFunctions.Game
                     Teams = 2,
                     TurnDelaySeconds = 4,
                     GameStartDelaySeconds = 10,
-                    PiecesInARowToWin = 4
+                    PiecesInARowToWin = 4,
+                    GameAbandonmentMinutes = 5
                 }
             };
         }

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using GameAction = BlazorFourInARowFunctions.Models.GameAction;
 using GameActionTypes = BlazorFourInARowFunctions.Models.GameActionTypes;
+using BlazorFourInARow.Common;
 
 namespace BlazorFourInARowFunctions
 {
@@ -55,14 +56,22 @@ namespace BlazorFourInARowFunctions
                     g.GameActionType == GameActionTypes.CompleteGame ||
                     g.GameActionType == GameActionTypes.AbandonGame))
                 {
+                    //Check if game is active
+                    if (gameActions.Any(g => g.CreatedOn > DateTime.Now.AddMinutes(-1 * currentGame.GameSettings.GameAbandonmentMinutes)))
+                    {
+                        return new OkObjectResult(gameStateBuilder.BuildGameState(gameActions));
+                    }
 
-                    return new OkObjectResult(gameStateBuilder.BuildGameState(gameActions));
+                    await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
+                    {
+                        GameActionType = GameActionTypes.AbandonGame,
+                        GameId = currentGame.GameId,
+                        GameActionStatus = GameActionStatuses.Valid,
+                    });
                 }
             }
 
             var gameAction = await CreateNewGameAction(client);
-
-            //TODO: Broadcast SignalR Update
 
             return new OkObjectResult(gameStateBuilder.BuildGameState(new List<GameAction>() { gameAction }));
         }
