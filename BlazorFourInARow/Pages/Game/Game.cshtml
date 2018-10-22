@@ -4,7 +4,9 @@
 
 <CountDown CountDownTo="@NextActionAvailable" CountdownCompleted="@ResetActionLock"></CountDown>
 
-<GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock"/>
+<CountDown CountDownTo="@NextGameStart" CountdownCompleted="@StartNextGame"></CountDown>
+
+<GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock" />
 
 @if (null != Team)
 {
@@ -14,13 +16,13 @@
 @if (null != GameState?.GameResult)
 {
     if (null == GameState.GameResult.WinningTeam)
-     {
-         <h1>Tie Game</h1>
-     }
-     else
-     {
+    {
+        <h1>Tie Game</h1>
+    }
+    else
+    {
         <h1>@GameState?.GameResult.WinningTeam.TeamId Has Won the Game!</h1>
-     }
+    }
 }
 
 <p>@GameState?.DebugMessage</p>

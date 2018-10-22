@@ -19,6 +19,8 @@ namespace BlazorFourInARow.Pages.Game
     {
         public GameState GameState { get; set; }
 
+        public GameState NextGameState { get; set; }
+
         public UserConnectionInfo UserConnectionInfo { get; set; }
 
         public Team Team { get; set; }
@@ -26,6 +28,8 @@ namespace BlazorFourInARow.Pages.Game
         public DateTime? NextActionAvailable { get; set; }
 
         public bool ActionsLocked { get; set; } = false;
+
+        public DateTime? NextGameStart { get; set; }
 
         [Inject]
         protected ICurrentGameStateProvider CurrentGameStateProvider { get; set; }
@@ -70,28 +74,56 @@ namespace BlazorFourInARow.Pages.Game
 
         protected async Task UpdateGameState(GameState gameState)
         {
-            GameState = gameState;
-
-            if (!GameStateManager.UserHasJoinedGame(gameState, UserConnectionInfo.User))
+            if (GameState == null || GameState.GameId == gameState.GameId)
             {
-                Team = await GameJoiner.JoinGameAsync(gameState.GameId, UserConnectionInfo.User);
-            }
-            else
-            {
-                Team = gameState.Teams.FirstOrDefault(t =>
-                    t.Users.Any(u => u.UserId == UserConnectionInfo.User.UserId));
-            }
+                GameState = gameState;
 
-            var user = Team?.Users.FirstOrDefault(u => u.UserId == UserConnectionInfo.User.UserId);
-
-            if (user != null)
-            {
-                NextActionAvailable = user.NextActionUnlocked;
-
-                if (NextActionAvailable > DateTime.Now)
+                if (!GameStateManager.UserHasJoinedGame(gameState, UserConnectionInfo.User))
                 {
-                    ActionsLocked = true;
+                    Team = await GameJoiner.JoinGameAsync(gameState.GameId, UserConnectionInfo.User);
                 }
+                else
+                {
+                    Team = gameState.Teams.FirstOrDefault(t =>
+                        t.Users.Any(u => u.UserId == UserConnectionInfo.User.UserId));
+                }
+
+                var user = Team?.Users.FirstOrDefault(u => u.UserId == UserConnectionInfo.User.UserId);
+
+                if (user != null)
+                {
+                    NextActionAvailable = user.NextActionUnlocked;
+
+                    if (NextActionAvailable > DateTime.Now)
+                    {
+                        ActionsLocked = true;
+                    }
+                }
+
+                if (GameState.GameResult != null && NextGameState == null)
+                {
+                    NextGameState = new GameState()
+                    {
+                        GameId = GameState.GameResult.NextGameId
+                    };
+
+                    NextGameStart = DateTime.Now.AddSeconds(gameState.GameSettings.GameStartDelaySeconds);
+                }
+            }
+            else if (NextGameState != null && NextGameState.GameId == gameState.GameId)
+            {
+                NextGameState = gameState;
+
+                if (!GameStateManager.UserHasJoinedGame(gameState, UserConnectionInfo.User))
+                {
+                    Team = await GameJoiner.JoinGameAsync(gameState.GameId, UserConnectionInfo.User);
+                }
+            }
+
+            if (gameState.GameStart > DateTime.Now)
+            {
+                NextGameStart = gameState.GameStart;
+                ActionsLocked = true;
             }
         }
 
@@ -109,6 +141,14 @@ namespace BlazorFourInARow.Pages.Game
             NextActionAvailable = DateTime.Now.AddSeconds(GameState.GameSettings.TurnDelaySeconds + 1);
 
             StateHasChanged();
+        }
+
+        public void StartNextGame()
+        {
+            GameState = NextGameState;
+            NextGameState = null;
+
+            ResetActionLock();
         }
     }
 }
