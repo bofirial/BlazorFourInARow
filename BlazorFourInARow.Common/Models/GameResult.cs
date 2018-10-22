@@ -8,7 +8,6 @@ namespace BlazorFourInARow.Common.Models
     {
         public Team WinningTeam { get; set; }
 
-        //TODO: Update App to use this property
-        public GameState NextGame { get; set; }
+        public string NextGameId { get; set; }
     }
 }

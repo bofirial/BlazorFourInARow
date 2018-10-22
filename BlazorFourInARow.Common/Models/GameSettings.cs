@@ -12,6 +12,8 @@ namespace BlazorFourInARow.Common.Models
 
         public double TurnDelaySeconds { get; set; }
 
+        public double GameStartDelaySeconds { get; set; }
+
         public int Teams { get; set; }
 
         public int PiecesInARowToWin { get; set; }

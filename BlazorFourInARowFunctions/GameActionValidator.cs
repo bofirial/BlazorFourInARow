@@ -70,6 +70,7 @@ namespace BlazorFourInARowFunctions
 
                     gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GamePosition.Column);
 
+                    ValidateGameStartLock(gameState, gameAction);
                     ValidateNextActionLock(gameState, gameAction);
 
                     log.LogInformation(
@@ -100,13 +101,20 @@ namespace BlazorFourInARowFunctions
 
                         if (null != gameResult)
                         {
+                            var gameBuilder = new GameBuilder();
+
+                            var newGameAction = gameBuilder.BuildNewGame(client);
+
                             await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
                             {
                                 GameId = gameAction.GameId,
                                 GameActionStatus = GameActionStatuses.Valid,
                                 GameActionType = GameActionTypes.CompleteGame,
-                                Team = gameResult.WinningTeam
+                                Team = gameResult.WinningTeam,
+                                NextGameId = newGameAction.GameId
                             });
+
+                            await client.CreateDocumentAsync(DocumentCollectionUri, newGameAction);
                         }
                     }
                 }
@@ -127,6 +135,15 @@ namespace BlazorFourInARowFunctions
                             Arguments = new object[] { gameStateBuilder.BuildGameState(gameActions) }
                         });
                 }
+
+                //TODO: Task.WhenAll these awaits?
+            }
+        }
+        private static void ValidateGameStartLock(GameState gameState, GameAction gameAction)
+        {
+            if (gameState.GameStart > DateTime.Now)
+            {
+                gameAction.GameActionStatus = GameActionStatuses.InvalidTooSoon;
             }
         }
 

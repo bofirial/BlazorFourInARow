@@ -59,7 +59,8 @@ namespace BlazorFourInARowFunctions.Game
                     case GameActionTypes.CompleteGame:
                         gameState.GameResult = new GameResult()
                         {
-                            WinningTeam = gameAction.Team
+                            WinningTeam = gameAction.Team,
+                            NextGameId = gameAction.GameId
                         };
 
                         break;
@@ -82,6 +83,7 @@ namespace BlazorFourInARowFunctions.Game
             var gameState = new GameState
             {
                 GameId = createGameAction.GameId,
+                GameStart = createGameAction.CreatedOn.AddSeconds(createGameAction.GameSettings.GameStartDelaySeconds),
                 GameCells = new List<List<GameCell>>(),
                 Teams = new List<Team>()
                 {

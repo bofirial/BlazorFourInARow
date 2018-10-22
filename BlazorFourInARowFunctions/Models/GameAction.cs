@@ -25,6 +25,8 @@ namespace BlazorFourInARowFunctions.Models
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
+        public string NextGameId { get; set; }
+
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
     }
