@@ -2,7 +2,9 @@
 
 @inherits BlazorFourInARow.Pages.Game.GameBase
 
-<GameBoard GameCells="@GameState?.GameCells" GameId="@GameState?.GameId" Team="@Team" />
+<CountDown CountDownTo="@NextActionAvailable" CountdownCompleted="@ResetActionLock"></CountDown>
+
+<GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock"/>
 
 @if (null != Team)
 {

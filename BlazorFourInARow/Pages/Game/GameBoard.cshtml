@@ -1,20 +1,33 @@
 ﻿@using BlazorFourInARow.BusinessLogic
+@using BlazorFourInARow.Common
+@using BlazorFourInARow.Common.Validators
 
 <div class="game-board d-flex flex-column-reverse position-relative">
-    @if (null != GameCells)
+    @if (null != GameState?.GameCells)
     {
         <ol class="d-flex flex-row list-unstyled m-0 position-absolute w-100 buttons">
-            @for (int i = 0; i < GameCells[0].Count; i++)
+            @for (int i = 0; i < GameState?.GameCells[0].Count; i++)
             {
                 var columnId = i;
 
+                bool columnFull = GameActionStatuses.InvalidColumnFull == 
+                                  GameStateManager.ValidateGameColumnAction(GameState, columnId);
+
+                bool disabled = ActionsLocked || GameState.GameResult != null || columnFull;
+
+                Action clickAction = async () =>
+                {
+                    if (!disabled) await PlaceGamePiece(columnId);
+                };
+
                 <li>
-                    <a href="javascript:void(0)" class="btn btn-secondary" onclick="@(() => PlaceGamePiece(columnId))">Drop</a>
+                    <a href="javascript:void(0)" class="btn btn-secondary @(disabled ? "disabled" : "")" 
+                       onclick="@clickAction">Drop</a>
                 </li>
             }
         </ol>
 
-        foreach (var row in GameCells)
+        foreach (var row in GameState?.GameCells)
          {
              <ol class="d-flex flex-row list-unstyled m-0">
                  @foreach (var cell in row)
@@ -31,23 +44,27 @@
 @functions {
 
     [Parameter]
-    string GameId { get; set; }
+    GameState GameState { get; set; }
 
     [Parameter]
     Team Team { get; set; }
 
     [Parameter]
-    List<List<GameCell>> GameCells { get; set; }
-    
+    bool ActionsLocked { get; set; }
+
+    [Parameter]
+    Action SetActionLock { get; set; }
+
+    [Inject]
+    IGameStateManager GameStateManager { get; set; }
+
     [Inject]
     IGamePieceDropper GamePieceDropper { get; set; }
 
     async Task PlaceGamePiece(int column)
     {
-        await GamePieceDropper.DropGamePieceAsync(column, GameId, Team);
+        await GamePieceDropper.DropGamePieceAsync(column, GameState?.GameId, Team);
 
-        //TODO: Disable Buttons
-        //TODO: Start Timer
-
+        SetActionLock();
     }
 }

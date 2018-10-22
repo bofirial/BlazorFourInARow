@@ -9,7 +9,9 @@ using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BlazorFourInARow.Common.Models;
 
 namespace BlazorFourInARowFunctions
 {
@@ -68,21 +70,26 @@ namespace BlazorFourInARowFunctions
 
                     gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GamePosition.Column);
 
+                    ValidateNextActionLock(gameState, gameAction);
+
                     log.LogInformation(
                         $"Game Action {gameAction.Id}'s status is {Enum.GetName(typeof(GameActionStatuses), gameAction.GameActionStatus)}.");
 
-                    foreach (var row in gameState.GameCells)
+                    if (gameAction.GameActionStatus == GameActionStatuses.Valid)
                     {
-                        var gameCell = row[gameAction.GamePosition.Column];
-
-                        if (null == gameCell.Team)
+                        foreach (var row in gameState.GameCells)
                         {
-                            gameAction.GamePosition.Row = gameCell.GamePosition.Row;
+                            var gameCell = row[gameAction.GamePosition.Column];
 
-                            gameCell.Team = gameAction.Team;
-                            gameCell.User = gameAction.User;
-                            break;
-                        }
+                            if (null == gameCell.Team)
+                            {
+                                gameAction.GamePosition.Row = gameCell.GamePosition.Row;
+
+                                gameCell.Team = gameAction.Team;
+                                gameCell.User = gameAction.User;
+                                break;
+                            }
+                        } 
                     }
 
                     await client.UpsertDocumentAsync(DocumentCollectionUri, gameAction);
@@ -106,6 +113,11 @@ namespace BlazorFourInARowFunctions
 
                 foreach (var gameId in updatedGameIds)
                 {
+                    if (string.IsNullOrEmpty(gameId))
+                    {
+                        continue;
+                    }
+
                     var gameActions = gameActionsProvider.GetGameActions(client, gameId);
 
                     await signalRMessages.AddAsync(
@@ -115,6 +127,17 @@ namespace BlazorFourInARowFunctions
                             Arguments = new object[] { gameStateBuilder.BuildGameState(gameActions) }
                         });
                 }
+            }
+        }
+
+        private static void ValidateNextActionLock(GameState gameState, GameAction gameAction)
+        {
+            var nextActionUnlocked = gameState.Teams.FirstOrDefault(t => t.TeamId == gameAction.Team.TeamId)
+                ?.Users?.FirstOrDefault(u => u.UserId == gameAction.User.UserId)?.NextActionUnlocked;
+
+            if (nextActionUnlocked > DateTime.Now)
+            {
+                gameAction.GameActionStatus = GameActionStatuses.InvalidTooSoon;
             }
         }
     }

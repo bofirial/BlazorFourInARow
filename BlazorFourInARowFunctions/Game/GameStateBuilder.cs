@@ -42,6 +42,19 @@ namespace BlazorFourInARowFunctions.Game
                         gameCell.Team = gameAction.Team;
                         gameCell.User = gameAction.User;
 
+                        var team = gameState.Teams.FirstOrDefault(t => t.TeamId == gameAction.Team.TeamId);
+                        var user = team?.Users?.FirstOrDefault(u => u.UserId == gameAction.User.UserId);
+
+                        if (user != null)
+                        {
+                            var gameActionUnlocked = gameAction.CreatedOn.AddSeconds(gameState.GameSettings.TurnDelaySeconds);
+
+                            if (gameActionUnlocked > user.NextActionUnlocked)
+                            {
+                                user.NextActionUnlocked = gameActionUnlocked; 
+                            }
+                        }
+
                         break;
                     case GameActionTypes.CompleteGame:
                         gameState.GameResult = new GameResult()

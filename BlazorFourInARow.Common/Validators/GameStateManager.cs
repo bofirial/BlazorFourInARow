@@ -37,8 +37,6 @@ namespace BlazorFourInARow.Common.Validators
                 return GameActionStatuses.InvalidGameHasEnded;
             }
 
-            //TODO: Validate GameAction Is Too Soon
-
             return GameActionStatuses.Valid;
         }
 

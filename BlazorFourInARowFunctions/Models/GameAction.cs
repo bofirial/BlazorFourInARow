@@ -23,7 +23,7 @@ namespace BlazorFourInARowFunctions.Models
 
         public GameSettings GameSettings { get; set; }
 
-        public DateTime CreatedOn { get; } = DateTime.Now;
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }

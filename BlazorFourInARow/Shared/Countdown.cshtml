@@ -1,0 +1,68 @@
+﻿@using System.Threading
+@using BlazorFourInARow.Pages.Game
+@using Microsoft.Extensions.Logging
+
+<div class="countdown">
+    @if (SecondsRemaining != 0)
+    {
+        <h3>@SecondsRemaining</h3>
+    }
+</div>
+
+@functions {
+
+    [Parameter]
+    DateTime? CountdownTo { get; set; }
+
+    [Parameter]
+    Action CountdownCompleted  { get; set; }
+
+    [Inject]
+    protected ILogger<GameBase> Logger { get; set; }
+
+    public int SecondsRemaining { get; set; }
+
+    public Timer Timer { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        UpdateSecondsRemaining(null);
+
+        Logger.LogInformation($"Countdown set to: {CountdownTo?.ToLongTimeString()}");
+    }
+
+    public void UpdateSecondsRemaining(object state)
+    {
+        if (CountdownTo == null)
+        {
+            SecondsRemaining = -1;
+        }
+        else
+        {
+            SecondsRemaining = (int)(CountdownTo.Value - DateTime.Now).TotalSeconds;
+        }
+
+        if (SecondsRemaining <= 0)
+        {
+            SecondsRemaining = 0;
+
+            if (Timer != null)
+            {
+                Timer?.Dispose();
+
+                Timer = null;
+
+                CountdownCompleted();
+            }
+        }
+        else
+        {
+            if (Timer == null)
+            {
+                Timer = new Timer(UpdateSecondsRemaining, null, 0, 500);
+            }
+        }
+
+        StateHasChanged();
+    }
+}

@@ -10,7 +10,7 @@ namespace BlazorFourInARow.Common.Models
 
         public int Rows { get; set; }
 
-        public decimal TurnDelaySeconds { get; set; }
+        public double TurnDelaySeconds { get; set; }
 
         public int Teams { get; set; }
 

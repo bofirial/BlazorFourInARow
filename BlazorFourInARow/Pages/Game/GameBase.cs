@@ -23,6 +23,10 @@ namespace BlazorFourInARow.Pages.Game
 
         public Team Team { get; set; }
 
+        public DateTime? NextActionAvailable { get; set; }
+
+        public bool ActionsLocked { get; set; } = false;
+
         [Inject]
         protected ICurrentGameStateProvider CurrentGameStateProvider { get; set; }
 
@@ -77,6 +81,34 @@ namespace BlazorFourInARow.Pages.Game
                 Team = gameState.Teams.FirstOrDefault(t =>
                     t.Users.Any(u => u.UserId == UserConnectionInfo.User.UserId));
             }
+
+            var user = Team?.Users.FirstOrDefault(u => u.UserId == UserConnectionInfo.User.UserId);
+
+            if (user != null)
+            {
+                NextActionAvailable = user.NextActionUnlocked;
+
+                if (NextActionAvailable > DateTime.Now)
+                {
+                    ActionsLocked = true;
+                }
+            }
+        }
+
+        public void ResetActionLock()
+        {
+            ActionsLocked = false;
+
+            StateHasChanged();
+        }
+
+        public void SetActionLock()
+        {
+            ActionsLocked = true;
+
+            NextActionAvailable = DateTime.Now.AddSeconds(GameState.GameSettings.TurnDelaySeconds + 1);
+
+            StateHasChanged();
         }
     }
 }

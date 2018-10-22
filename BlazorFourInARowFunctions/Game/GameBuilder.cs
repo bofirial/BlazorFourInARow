@@ -23,7 +23,7 @@ namespace BlazorFourInARowFunctions.Game
                     Columns = 7,
                     Rows = 6,
                     Teams = 2,
-                    TurnDelaySeconds = 3,
+                    TurnDelaySeconds = 4,
                     PiecesInARowToWin = 4
                 }
             };
