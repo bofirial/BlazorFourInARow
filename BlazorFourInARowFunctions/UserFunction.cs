@@ -55,7 +55,6 @@ namespace BlazorFourInARowFunctions
 
             return new OkObjectResult(new UserConnectionInfo()
             {
-                //Url = connectionInfo.Url,
                 Url = GetSignalRUrl(connectionInfo),
                 AccessToken = connectionInfo.AccessToken,
                 User = user
