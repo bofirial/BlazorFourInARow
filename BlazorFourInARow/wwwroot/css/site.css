@@ -2,6 +2,9 @@
 html, body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 
+.main {
+  max-width: 720px !important; }
+
 .game-board {
   border: 25px solid transparent;
   border-image: url(/images/frame-border.png) 33% repeat;
