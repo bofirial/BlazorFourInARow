@@ -2,9 +2,9 @@
 
 @inherits BlazorFourInARow.Pages.Game.GameBase
 
-<CountDown CountDownTo="@NextActionAvailable" CountdownCompleted="@ResetActionLock"></CountDown>
+<CountDown CountDownTo="@NextActionAvailableOn" CountdownCompleted="@ResetActionLock"></CountDown>
 
-<CountDown CountDownTo="@NextGameStart" CountdownCompleted="@StartNextGame"></CountDown>
+<CountDown CountDownTo="@NextGameStartOn" CountdownCompleted="@StartNextGame"></CountDown>
 
 <GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock" />
 

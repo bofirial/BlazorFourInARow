@@ -49,7 +49,7 @@ namespace BlazorFourInARowFunctions.Game
                         {
                             var gameActionUnlocked = gameAction.CreatedOn.AddSeconds(gameState.GameSettings.TurnDelaySeconds);
 
-                            if (gameActionUnlocked > user.NextActionUnlocked)
+                            if (gameActionUnlocked > user.NextActionUnlocked || user.NextActionUnlocked == null)
                             {
                                 user.NextActionUnlocked = gameActionUnlocked; 
                             }
@@ -60,7 +60,7 @@ namespace BlazorFourInARowFunctions.Game
                         gameState.GameResult = new GameResult()
                         {
                             WinningTeam = gameAction.Team,
-                            NextGameId = gameAction.GameId
+                            NextGameId = gameAction.NextGameId
                         };
 
                         break;

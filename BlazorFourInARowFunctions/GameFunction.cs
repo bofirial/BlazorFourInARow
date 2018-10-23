@@ -42,7 +42,7 @@ namespace BlazorFourInARowFunctions
 
             var currentGame = client.CreateDocumentQuery<GameAction>(documentCollectionUri)
                 .Where(g => g.GameActionType == GameActionTypes.CreateGame)
-                .OrderBy(g => g.CreatedOn)
+                .OrderByDescending(g => g.CreatedOn)
                 .AsEnumerable()
                 .FirstOrDefault();
 
