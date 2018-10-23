@@ -2,16 +2,21 @@
 
 @inherits BlazorFourInARow.Pages.Game.GameBase
 
-<CountDown CountDownTo="@NextActionAvailableOn" CountdownCompleted="@ResetActionLock"></CountDown>
+<div class="game-info">
+    @if (NextGameStartOn > DateTime.Now)
+    {
+        <CountDown CountDownTo="@NextGameStartOn" CountdownCompleted="@StartNextGame"></CountDown>
+    }
+    else
+    {
+        <CountDown CountDownTo="@NextActionAvailableOn" CountdownCompleted="@ResetActionLock"></CountDown>
+    }
 
-<CountDown CountDownTo="@NextGameStartOn" CountdownCompleted="@StartNextGame"></CountDown>
-
-<GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock" />
-
-@if (null != Team)
-{
-    <h1>@Team.DisplayColor Team</h1>
-}
+    @if (null != Team)
+    {
+        <h1>@Team.DisplayColor Team</h1>
+    }
+</div>
 
 @if (null != GameState?.GameResult)
 {
@@ -25,4 +30,4 @@
     }
 }
 
-<p>@GameState?.DebugMessage</p>
+<GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock" />
