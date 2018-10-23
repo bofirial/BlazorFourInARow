@@ -42,6 +42,10 @@ html, body {
         background-image: url(/images/red-game-piece.png); }
       .game-board li .game-piece.Black {
         background-image: url(/images/black-game-piece.png); }
+      .game-board li .game-piece.Green {
+        background-image: url(/images/green-game-piece.png); }
+      .game-board li .game-piece.Blue {
+        background-image: url(/images/blue-game-piece.png); }
 
 /*
 app {

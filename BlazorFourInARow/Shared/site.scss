@@ -51,7 +51,6 @@ html, body {
             display: block;
             background-size: contain;
             image-rendering: pixelated;
-
             z-index: -1;
 
             &.Red {
@@ -60,6 +59,14 @@ html, body {
 
             &.Black {
                 background-image: url(/images/black-game-piece.png);
+            }
+
+            &.Green {
+                background-image: url(/images/green-game-piece.png);
+            }
+
+            &.Blue {
+                background-image: url(/images/blue-game-piece.png);
             }
         }
     }

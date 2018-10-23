@@ -89,14 +89,14 @@ namespace BlazorFourInARowFunctions.Game
                 {
                     new Team()
                     {
-                        TeamId = "Red",
-                        DisplayColor = "Red",
+                        TeamId = "Green",
+                        DisplayColor = "Green",
                         Users = new List<User>()
                     },
                     new Team()
                     {
-                        TeamId = "Black",
-                        DisplayColor = "Black",
+                        TeamId = "Blue",
+                        DisplayColor = "Blue",
                         Users = new List<User>()
                     }
                 },
