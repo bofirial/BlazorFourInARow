@@ -30,7 +30,8 @@ html, body {
       height: auto;
       flex: 1 0 auto;
       image-rendering: pixelated;
-      display: flex; }
+      display: flex;
+      position: relative; }
       .game-board li.cell:before {
         content: '';
         float: left;
@@ -40,15 +41,22 @@ html, body {
       display: block;
       background-size: contain;
       image-rendering: pixelated;
-      z-index: -1; }
+      z-index: -1;
+      position: relative;
+      top: -100vh;
+      transition: top linear 1s; }
       .game-board li .game-piece.Red {
-        background-image: url(/images/red-game-piece.png); }
+        background-image: url(/images/red-game-piece.png);
+        top: 0; }
       .game-board li .game-piece.Black {
-        background-image: url(/images/black-game-piece.png); }
+        background-image: url(/images/black-game-piece.png);
+        top: 0; }
       .game-board li .game-piece.Green {
-        background-image: url(/images/green-game-piece.png); }
+        background-image: url(/images/green-game-piece.png);
+        top: 0; }
       .game-board li .game-piece.Blue {
-        background-image: url(/images/blue-game-piece.png); }
+        background-image: url(/images/blue-game-piece.png);
+        top: 0; }
 
 /*
 app {
