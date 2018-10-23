@@ -9,15 +9,14 @@ html, body {
   border: 25px solid transparent;
   border-image: url(/images/frame-border.png) 33% repeat;
   image-rendering: auto;
-  image-rendering: crisp-edges;
   image-rendering: pixelated;
-  margin-top: 5rem; }
+  margin: 5.5rem 0 2rem; }
   @media screen and (min-width: 500px) {
     .game-board {
       border: 50px solid transparent;
       border-image: url(/images/frame-border.png) 33% repeat; } }
   .game-board .buttons {
-    top: -6rem; }
+    top: -5rem; }
     .game-board .buttons li {
       flex-shrink: 1;
       overflow: hidden;
