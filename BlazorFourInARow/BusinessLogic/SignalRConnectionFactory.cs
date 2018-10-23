@@ -15,7 +15,26 @@ namespace BlazorFourInARow.BusinessLogic
         {
             return new HubConnectionBuilder().WithUrl(userConnectionInfo.Url, option =>
             {
-                option.AccessTokenProvider = () => Task.FromResult(userConnectionInfo.AccessToken);
+                option.AccessTokenProvider = () =>
+                {
+                    return Task.FromResult(userConnectionInfo.AccessToken);
+                    //var jwtTokenHandler = new JwtSecurityTokenHandler();
+                    //var accessKey = userConnectionInfo.AccessToken;
+
+                    //var token = jwtTokenHandler.CreateJwtSecurityToken(
+                    //    issuer: null,
+                    //    audience: userConnectionInfo.Url,
+                    //    subject: new ClaimsIdentity(new[]
+                    //    {
+                    //        new Claim(ClaimTypes.NameIdentifier, userConnectionInfo.User.DisplayName)
+                    //    }),
+                    //    expires: DateTime.UtcNow.Add(TimeSpan.FromHours(1)),
+                    //    signingCredentials: new SigningCredentials(
+                    //        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessKey)),
+                    //        SecurityAlgorithms.HmacSha256));
+
+                    //return Task.FromResult(jwtTokenHandler.WriteToken(token));
+                };
             }).Build();
         }
     }

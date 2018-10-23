@@ -41,14 +41,17 @@ namespace BlazorFourInARowFunctions
                 return new BadRequestObjectResult("Missing user object in POST body.");
             }
 
-            if (!UserRegistrationGameActionAlreadyExists(client, user))
+            if (UserRegistrationGameActionAlreadyExists(client, user))
             {
-                await StoreRegisterUserGameAction(client, user);
-
-                log.LogInformation($"Created new user {user.DisplayName}. ({user.UserId})");
+                log.LogError($"A User with an id of ({user.UserId}) has already been registered.");
+                return new ConflictObjectResult($"A User with an id of ({user.UserId}) has already been registered.");
             }
 
             //TODO: Set user.DisplayColor;
+
+            await StoreRegisterUserGameAction(client, user);
+
+            log.LogInformation($"Created new user {user.DisplayName}. ({user.UserId})");
 
             return new OkObjectResult(new UserConnectionInfo()
             {
