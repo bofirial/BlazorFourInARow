@@ -2,9 +2,8 @@
 
 @inherits BlazorFourInARow.Pages.Game.GameBase
 
-<div class="game-info clearfix my-2">
-    <h3 class="float-right"><span class="@Team?.DisplayColor">@Team?.DisplayColor</span> Team</h3>
-</div>
+<h3 class="game-info text-center my-2"><span class="@Team?.DisplayColor">@Team?.DisplayColor</span> Team</h3>
+
 
 <GameBoard GameState="@GameState" Team="@Team" ActionsLocked="@ActionsLocked" SetActionLock="@SetActionLock" />
 
