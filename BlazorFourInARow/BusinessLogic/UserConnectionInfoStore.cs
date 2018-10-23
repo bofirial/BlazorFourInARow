@@ -28,9 +28,12 @@ namespace BlazorFourInARow.BusinessLogic
         {
             var userConnectionInfo = await _localStorage.GetItem<UserConnectionInfo>(KEY);
 
-            userConnectionInfo =
-                await _httpClient.PostJsonAsync<UserConnectionInfo>(
-                    $"{_serviceBaseUrlProvider.GetServiceBaseUrl()}/api/user", userConnectionInfo.User);
+            if (userConnectionInfo?.User != null)
+            {
+                userConnectionInfo =
+                    await _httpClient.PostJsonAsync<UserConnectionInfo>(
+                        $"{_serviceBaseUrlProvider.GetServiceBaseUrl()}/api/user", userConnectionInfo.User); 
+            }
 
             _logger.LogInformation($"User Object Information.  IsNull = {null == userConnectionInfo}.  ID = {userConnectionInfo?.User?.UserId}");
 
