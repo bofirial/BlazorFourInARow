@@ -141,7 +141,7 @@ namespace BlazorFourInARowFunctions
         }
         private static void ValidateGameStartLock(GameState gameState, GameAction gameAction)
         {
-            if (gameState.GameStart > DateTime.Now)
+            if (gameState.GameStart > DateTime.Now.AddSeconds(-1))
             {
                 gameAction.GameActionStatus = GameActionStatuses.InvalidTooSoon;
             }
@@ -152,7 +152,7 @@ namespace BlazorFourInARowFunctions
             var nextActionUnlocked = gameState.Teams.FirstOrDefault(t => t.TeamId == gameAction.Team.TeamId)
                 ?.Users?.FirstOrDefault(u => u.UserId == gameAction.User.UserId)?.NextActionUnlocked;
 
-            if (nextActionUnlocked > DateTime.Now)
+            if (nextActionUnlocked > DateTime.Now.AddSeconds(-1))
             {
                 gameAction.GameActionStatus = GameActionStatuses.InvalidTooSoon;
             }

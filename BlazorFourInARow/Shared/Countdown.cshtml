@@ -14,61 +14,74 @@
 }
     @functions {
 
-[Parameter]
-DateTime? CountdownTo { get; set; }
+        public DateTime? CountdownTo { get; set; }
 
-[Parameter]
-Action CountdownCompleted { get; set; }
+        [Parameter]
+        Action CountdownCompleted { get; set; }
 
-[Parameter]
-string PostLabel { get; set; }
+        [Parameter]
+        string PostLabel { get; set; }
 
-[Inject]
-protected ILogger<GameBase> Logger { get; set; }
+        [Inject]
+        protected ILogger<GameBase> Logger { get; set; }
 
-public int SecondsRemaining { get; set; }
+        public int SecondsRemaining { get; set; }
 
-public Timer Timer { get; set; }
+        public Timer Timer { get; set; }
 
-protected override void OnParametersSet()
-{
-    UpdateSecondsRemaining(null);
+        //protected override void OnParametersSet()
+        //{
+        //    UpdateSecondsRemaining(null);
 
-    Logger.LogInformation($"Countdown set to: {CountdownTo?.ToLongTimeString()}");
-}
+        //    Logger.LogInformation($"Countdown set to: {CountdownTo?.ToLongTimeString()}");
 
-public void UpdateSecondsRemaining(object state)
-{
-    if (CountdownTo == null)
-    {
-        SecondsRemaining = -1;
-    }
-    else
-    {
-        SecondsRemaining = (int)(CountdownTo.Value - DateTime.Now).TotalSeconds;
-    }
+        //    if (CountdownTo < DateTime.Now && Timer == null)
+        //    {
+        //        CountdownCompleted();
+        //    }
+        //}
 
-    if (SecondsRemaining <= 0)
-    {
-        SecondsRemaining = 0;
-
-        if (Timer != null)
+        public void UpdateCountDownTo(DateTime? countDownTo)
         {
-            Timer?.Dispose();
+            CountdownTo = countDownTo;
 
-            Timer = null;
+            Logger.LogInformation($"UpdateCountDownTo Start: {countDownTo} {DateTime.Now} {countDownTo < DateTime.Now} {Timer == null}");
 
-            CountdownCompleted();
+            UpdateSecondsRemaining(null);
         }
-    }
-    else
-    {
-        if (Timer == null)
+
+        public void UpdateSecondsRemaining(object state)
         {
-            Timer = new Timer(UpdateSecondsRemaining, null, 0, 500);
-        }
-    }
+            if (CountdownTo == null)
+            {
+                SecondsRemaining = -1;
+            }
+            else
+            {
+                SecondsRemaining = (int)(CountdownTo.Value - DateTime.Now).TotalSeconds;
+            }
 
-    StateHasChanged();
+            if (SecondsRemaining <= 0)
+            {
+                SecondsRemaining = 0;
+
+                if (Timer != null)
+                {
+                    Timer?.Dispose();
+
+                    Timer = null;
+                }
+
+                CountdownCompleted();
+            }
+            else
+            {
+                if (Timer == null)
+                {
+                    Timer = new Timer(UpdateSecondsRemaining, null, 0, 500);
+                }
+            }
+
+            StateHasChanged();
+        }
 }
-    }

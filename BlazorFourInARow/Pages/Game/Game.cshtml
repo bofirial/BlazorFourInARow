@@ -32,11 +32,5 @@
     }
 }
 
-@if (NextGameStartOn > DateTime.Now)
-{
-    <CountDown CountDownTo="@NextGameStartOn" CountdownCompleted="@StartNextGame" PostLabel="second(s) until the game begins!"></CountDown>
-}
-else
-{
-    <CountDown CountDownTo="@NextActionAvailableOn" CountdownCompleted="@ResetActionLock" PostLabel="second(s) until your next move."></CountDown>
-}
+<CountDown ref="StartGameCountDown" CountdownCompleted="@StartNextGame" PostLabel="second(s) until the game begins!"></CountDown>
+<CountDown ref="ActionLockCountDown" CountdownCompleted="@ResetActionLock" PostLabel="second(s) until your next move."></CountDown>

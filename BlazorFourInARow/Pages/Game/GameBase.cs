@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Blazor.Extensions;
 using BlazorFourInARow.BusinessLogic;
+using BlazorFourInARow.Shared;
 using BlazorFourInARow.Common.Models;
 using BlazorFourInARow.Common.Validators;
 using Microsoft.AspNetCore.Blazor.Components;
@@ -25,11 +26,11 @@ namespace BlazorFourInARow.Pages.Game
 
         public Team Team { get; set; }
 
-        public DateTime? NextActionAvailableOn { get; set; }
-
         public bool ActionsLocked { get; set; } = false;
 
-        public DateTime? NextGameStartOn { get; set; }
+        public Countdown StartGameCountDown;
+
+        public Countdown ActionLockCountDown;
 
         [Inject]
         protected ICurrentGameStateProvider CurrentGameStateProvider { get; set; }
@@ -92,12 +93,12 @@ namespace BlazorFourInARow.Pages.Game
 
                 if (user != null)
                 {
-                    NextActionAvailableOn = user.NextActionUnlocked;
-
-                    if (NextActionAvailableOn > DateTime.Now)
+                    if (user.NextActionUnlocked > DateTime.Now)
                     {
+                        Logger.LogInformation($"Locking Actions Due to NextActionLock for: {user.DisplayName} {user.NextActionUnlocked} {DateTime.Now}");
                         ActionsLocked = true;
                     }
+                    ActionLockCountDown.UpdateCountDownTo(user.NextActionUnlocked);
                 }
 
                 if (GameState.GameResult != null && NextGameState == null)
@@ -109,7 +110,7 @@ namespace BlazorFourInARow.Pages.Game
 
                     Logger.LogInformation($"Creating Next Game State: {NextGameState.GameId}");
 
-                    NextGameStartOn = DateTime.Now.AddSeconds(gameState.GameSettings.GameStartDelaySeconds);
+                    StartGameCountDown.UpdateCountDownTo(DateTime.Now.AddSeconds(gameState.GameSettings.GameStartDelaySeconds));
                 }
             }
             else if (NextGameState != null && NextGameState.GameId == gameState.GameId)
@@ -134,8 +135,9 @@ namespace BlazorFourInARow.Pages.Game
 
             if (gameState.GameStart > DateTime.Now)
             {
-                NextGameStartOn = gameState.GameStart;
-                NextActionAvailableOn = null;
+                StartGameCountDown.UpdateCountDownTo(gameState.GameStart);
+                ActionLockCountDown.UpdateCountDownTo(null);
+                Logger.LogInformation($"Locking Actions Due to Game Start Timer: {gameState.GameStart.ToLongTimeString()}");
                 ActionsLocked = true;
             }
         }
@@ -149,9 +151,10 @@ namespace BlazorFourInARow.Pages.Game
 
         public void SetActionLock()
         {
+            Logger.LogInformation($"Locking Actions Due to Set Action Lock Call.");
             ActionsLocked = true;
 
-            NextActionAvailableOn = DateTime.Now.AddSeconds(GameState.GameSettings.TurnDelaySeconds + 1);
+            ActionLockCountDown.UpdateCountDownTo(DateTime.Now.AddSeconds(GameState.GameSettings.TurnDelaySeconds + 1));
 
             StateHasChanged();
         }
