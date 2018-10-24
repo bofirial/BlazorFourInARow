@@ -1,5 +1,4 @@
-﻿@import url("open-iconic/font/css/open-iconic-bootstrap.min.css");
-html, body {
+﻿html, body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 
 .main {
@@ -42,8 +41,9 @@ html, body {
       image-rendering: pixelated;
       z-index: -1;
       position: relative;
-      top: -100vh;
-      transition: top linear 1s; }
+      top: -50vh;
+      transition: top ease-in 0.5s;
+      transform: translateZ(0); }
       .game-board li .game-piece.Red {
         background-image: url(/images/red-game-piece.png);
         top: 0; }
