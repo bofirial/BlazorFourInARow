@@ -31,7 +31,7 @@ namespace BlazorFourInARow.BusinessLogic
 
             await _httpClient.PostJsonAsync(
                 $"{_serviceBaseUrlProvider.GetServiceBaseUrl()}/api/game-piece",
-                new GamePosition()
+                new GameCell()
                 {
                     Column = column,
                     User = userConnectionInfo.User,

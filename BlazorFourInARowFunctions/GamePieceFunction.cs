@@ -32,14 +32,14 @@ namespace BlazorFourInARowFunctions
                 CreateIfNotExists = true)]
             DocumentClient client, ILogger log)
         {
-            var gamePiece = await req.Content.ReadAsAsync<GamePosition>();
+            var gamePiece = await req.Content.ReadAsAsync<GameCell>();
 
             await client.CreateDocumentAsync(DocumentCollectionUri, new GameAction()
             {
                 GameActionStatus = GameActionStatuses.AwaitingValidation,
                 GameActionType = GameActionTypes.PlaceGamePiece,
                 GameId = gamePiece.GameId,
-                GamePosition = gamePiece,
+                GameCell = gamePiece,
                 User = gamePiece.User,
                 Team = gamePiece.Team
             });

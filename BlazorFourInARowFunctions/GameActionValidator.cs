@@ -68,7 +68,7 @@ namespace BlazorFourInARowFunctions
                     var gameActions = gameActionsProvider.GetGameActions(client, gameAction.GameId);
                     var gameState = gameStateBuilder.BuildGameState(gameActions);
 
-                    gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GamePosition.Column);
+                    gameAction.GameActionStatus = gameStateManager.ValidateGameColumnAction(gameState, gameAction.GameCell.Column);
 
                     ValidateGameStartLock(gameState, gameAction);
                     ValidateNextActionLock(gameState, gameAction);
@@ -80,11 +80,11 @@ namespace BlazorFourInARowFunctions
                     {
                         foreach (var row in gameState.GameCells)
                         {
-                            var gameCell = row[gameAction.GamePosition.Column];
+                            var gameCell = row[gameAction.GameCell.Column];
 
                             if (null == gameCell.Team)
                             {
-                                gameAction.GamePosition.Row = gameCell.GamePosition.Row;
+                                gameAction.GameCell.Row = gameCell.Row;
 
                                 gameCell.Team = gameAction.Team;
                                 gameCell.User = gameAction.User;

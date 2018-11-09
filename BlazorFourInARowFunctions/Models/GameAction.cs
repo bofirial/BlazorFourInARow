@@ -15,7 +15,7 @@ namespace BlazorFourInARowFunctions.Models
 
         public Team Team { get; set; }
 
-        public GamePosition GamePosition { get; set; }
+        public GameCell GameCell { get; set; }
 
         public GameActionStatuses GameActionStatus { get; set; }
 

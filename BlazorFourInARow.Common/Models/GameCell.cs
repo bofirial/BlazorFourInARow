@@ -2,7 +2,11 @@
 {
     public class GameCell
     {
-        public GamePosition GamePosition { get; set; }
+        public string GameId { get; set; }
+
+        public int? Row { get; set; }
+
+        public int Column { get; set; }
 
         public User User { get; set; }
 

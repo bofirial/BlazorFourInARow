@@ -37,7 +37,7 @@ namespace BlazorFourInARowFunctions.Game
                     case GameActionTypes.LeaveGame:
                         break;
                     case GameActionTypes.PlaceGamePiece:
-                        var gameCell = gameState.GameCells[gameAction.GamePosition.Row.Value][gameAction.GamePosition.Column];
+                        var gameCell = gameState.GameCells[gameAction.GameCell.Row.Value][gameAction.GameCell.Column];
 
                         gameCell.Team = gameAction.Team;
                         gameCell.User = gameAction.User;
@@ -112,11 +112,8 @@ namespace BlazorFourInARowFunctions.Game
                 {
                     gameState.GameCells[i].Add(new GameCell()
                     {
-                        GamePosition = new GamePosition()
-                        {
-                            Row = i,
-                            Column = j
-                        }
+                        Row = i,
+                        Column = j
                     });
                 }
             }

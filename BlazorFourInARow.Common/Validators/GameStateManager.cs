@@ -94,13 +94,13 @@ namespace BlazorFourInARow.Common.Validators
 
                     if (victoryCondition.IsMatch)
                     {
-                        if (null == gameCell.GamePosition.Row)
+                        if (null == gameCell.Row)
                         {
                             throw new ApplicationException("Invalid Game Position in Game State - Missing Row"); 
                         }
 
-                        var targetRow = gameCell.GamePosition.Row.Value + i * victoryCondition.RowTransform;
-                        var targetColumn = gameCell.GamePosition.Column + i * victoryCondition.ColumnTransform;
+                        var targetRow = gameCell.Row.Value + i * victoryCondition.RowTransform;
+                        var targetColumn = gameCell.Column + i * victoryCondition.ColumnTransform;
 
                         if (targetRow < 0 || targetRow >= gameState.GameSettings.Rows || targetColumn < 0 ||
                             targetColumn >= gameState.GameSettings.Columns)
