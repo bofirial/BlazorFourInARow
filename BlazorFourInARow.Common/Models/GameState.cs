@@ -17,7 +17,5 @@ namespace BlazorFourInARow.Common.Models
         public GameResult GameResult { get; set; }
 
         public GameSettings GameSettings { get; set; }
-
-        public string DebugMessage { get; set; }
     }
 }

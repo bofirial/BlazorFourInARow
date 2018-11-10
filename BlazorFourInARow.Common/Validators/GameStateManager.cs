@@ -9,25 +9,15 @@ namespace BlazorFourInARow.Common.Validators
     {
         public bool UserHasJoinedGame(GameState gameState, User user)
         {
-            return gameState.Teams.SelectMany(t => t.Users).Any(u => u.UserId == user.UserId);
+            var usersInGame = gameState.Teams.SelectMany(t => t.Users);
+
+            return usersInGame.Any(u => u.UserId == user.UserId);
         }
 
         public GameActionStatuses ValidateGameColumnAction(GameState gameState, int column)
         {
-            var columnFull = true;
 
-            foreach (var row in gameState.GameCells)
-            {
-                var gameCell = row[column];
-
-                if (null == gameCell.Team)
-                {
-                    columnFull = false;
-                    break;
-                }
-            }
-
-            if (columnFull)
+            if (GameStateColumnIsFull(gameState, column))
             {
                 return GameActionStatuses.InvalidColumnFull;
             }
@@ -38,6 +28,21 @@ namespace BlazorFourInARow.Common.Validators
             }
 
             return GameActionStatuses.Valid;
+        }
+
+        private static bool GameStateColumnIsFull(GameState gameState, int column)
+        {
+            foreach (var row in gameState.GameCells)
+            {
+                var gameCell = row[column];
+
+                if (null == gameCell.Team)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public GameResult CheckForGameCompletion(GameState gameState)
@@ -53,9 +58,11 @@ namespace BlazorFourInARow.Common.Validators
                     if (null == gameCell.Team)
                     {
                         gameBoardIsFull = false;
+
+                        continue;
                     }
 
-                    if (gameCell.Team != null && GameCellIsStartOfVictoryRow(gameCell, gameState))
+                    if (GameCellIsStartOfVictoryRow(gameCell, gameState))
                     {
                         return new GameResult() { WinningTeam = gameCell.Team };
                     }
@@ -87,45 +94,35 @@ namespace BlazorFourInARow.Common.Validators
 
             for (var i = 1; i < gameState.GameSettings.PiecesInARowToWin; i++)
             {
-                //for (var j = 0; j < victoryConditions.Count; j++)
-                foreach (var victoryCondition in victoryConditions)
+                foreach (var victoryCondition in victoryConditions.Where(vc => vc.IsMatch))
                 {
-                    //var victoryCondition = victoryConditions[j];
-
-                    if (victoryCondition.IsMatch)
+                    if (null == gameCell.Row)
                     {
-                        if (null == gameCell.Row)
-                        {
-                            throw new ApplicationException("Invalid Game Position in Game State - Missing Row"); 
-                        }
-
-                        var targetRow = gameCell.Row.Value + i * victoryCondition.RowTransform;
-                        var targetColumn = gameCell.Column + i * victoryCondition.ColumnTransform;
-
-                        if (targetRow < 0 || targetRow >= gameState.GameSettings.Rows || targetColumn < 0 ||
-                            targetColumn >= gameState.GameSettings.Columns)
-                        {
-                            victoryCondition.IsMatch = false;
-                            continue;
-                        }
-
-                        var targetCell = gameState.GameCells[targetRow][targetColumn];
-
-                        victoryCondition.IsMatch = victoryCondition.IsMatch && targetCell?.Team?.TeamId == gameCell.Team.TeamId;
+                        throw new ApplicationException("Invalid Game Position in Game State - Missing Row"); 
                     }
+
+                    var targetRow = gameCell.Row.Value + i * victoryCondition.RowTransform;
+                    var targetColumn = gameCell.Column + i * victoryCondition.ColumnTransform;
+
+                    if (!IsValidGamePosition(gameState, targetRow, targetColumn))
+                    {
+                        victoryCondition.IsMatch = false;
+                        continue;
+                    }
+
+                    var targetCell = gameState.GameCells[targetRow][targetColumn];
+
+                    victoryCondition.IsMatch = targetCell?.Team?.TeamId == gameCell.Team.TeamId;
                 }
             }
 
             return victoryConditions.Any(v => v.IsMatch);
         }
-    }
 
-    public class VictoryCondition
-    {
-        public bool IsMatch { get; set; }
-
-        public short RowTransform { get; set; }
-
-        public short ColumnTransform { get; set; }
+        private static bool IsValidGamePosition(GameState gameState, int targetRow, int targetColumn)
+        {
+            return targetRow >= 0 && targetRow < gameState.GameSettings.Rows && targetColumn >= 0 &&
+                   targetColumn < gameState.GameSettings.Columns;
+        }
     }
 }
